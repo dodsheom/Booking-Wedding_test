@@ -167,3 +167,5 @@ if __name__ == '__main__':
     init_db() # إنشاء الجداول عند التشغيل لأول مرة
     from waitress import serve
     serve(app, host="0.0.0.0", port=5000)
+
+    #test
