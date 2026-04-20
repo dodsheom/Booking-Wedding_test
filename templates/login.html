@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل الدخول - فرحتك</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --gold: #C9A84C; --gold-light: #E8C97A; --gold-pale: #F5EDD5;
+    --dark: #1A1208; --dark-2: #2C1E08; --cream: #FAF6EE;
+    --text: #3D2B0A; --text-light: #7A6040; --white: #FFFFFF;
+    --border: rgba(201,168,76,0.15); --green: #27ae60;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Cairo', sans-serif;
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(circle at top right, var(--dark-2), var(--dark));
+    padding: 2rem;
+  }
+  .auth-card {
+    background: var(--white); width: 100%; max-width: 450px;
+    border-radius: 2rem; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+  }
+  .auth-header {
+    background: var(--dark); padding: 3rem 2rem; text-align: center; color: var(--gold);
+    position: relative;
+  }
+  .auth-header h1 { font-family: 'Playfair Display'; font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .auth-tabs { display: flex; background: var(--dark); padding: 0 1rem 1rem; gap: 1rem; }
+  .tab-btn {
+    flex: 1; padding: 1rem; border: none; background: rgba(255,255,255,0.05);
+    color: var(--white); cursor: pointer; border-radius: 1rem; font-family: 'Cairo';
+    transition: 0.3s;
+  }
+  .tab-btn.active { background: var(--gold); color: var(--dark); font-weight: 700; }
+  .auth-body { padding: 2.5rem; }
+  .form-group { margin-bottom: 1.5rem; }
+  .form-group label { display: block; margin-bottom: 0.5rem; color: var(--text); font-weight: 600; }
+  .input-wrap { position: relative; }
+  .input-wrap i { position: absolute; right: 1.2rem; top: 50%; transform: translateY(-50%); color: var(--gold); }
+  .input-wrap input {
+    width: 100%; padding: 1rem 3rem 1rem 1.2rem; border: 1.5px solid var(--border);
+    border-radius: 1rem; font-family: 'Cairo'; outline: none; transition: 0.3s;
+  }
+  .input-wrap input:focus { border-color: var(--gold); box-shadow: 0 0 0 4px var(--gold-pale); }
+  .btn-auth {
+    width: 100%; padding: 1.2rem; border: none; background: var(--dark);
+    color: var(--gold); border-radius: 1rem; font-size: 1.1rem; font-weight: 700;
+    cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.8rem;
+    margin-top: 1rem;
+  }
+  .btn-auth:hover { background: var(--gold); color: var(--dark); transform: translateY(-2px); }
+  .role-selection { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+  .role-opt {
+    flex: 1; padding: 1rem; border: 1.5px solid var(--border); border-radius: 1rem;
+    text-align: center; cursor: pointer; transition: 0.3s;
+  }
+  .role-opt.selected { border-color: var(--gold); background: var(--gold-pale); }
+</style>
+</head>
+<body>
+
+<div class="auth-card">
+  <div class="auth-header">
+    <h1>فرحتك</h1>
+    <p>بوابتك لأجمل ليلة العمر</p>
+  </div>
+
+  <div class="auth-tabs">
+    <button class="tab-btn active" onclick="switchTab('login', this)">تسجيل الدخول</button>
+    <button class="tab-btn" onclick="switchTab('register', this)">حساب جديد</button>
+  </div>
+
+  <div class="auth-body">
+    <form id="loginForm" action="/login.html" method="POST">
+      <div class="form-group">
+        <label>البريد الإلكتروني</label>
+        <div class="input-wrap">
+          <i class="fas fa-envelope"></i>
+          <input type="email" name="email" placeholder="example@email.com" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <div class="input-wrap">
+          <i class="fas fa-lock"></i>
+          <input type="password" name="password" placeholder="أدخل كلمة المرور" required>
+        </div>
+      </div>
+      <button type="submit" class="btn-auth">
+        <i class="fas fa-sign-in-alt"></i> دخول
+      </button>
+    </form>
+
+    <form id="registerForm" action="/register" method="POST" style="display:none">
+      <div class="role-selection">
+        <label class="role-opt selected" onclick="selectRole(this)">
+          <input type="radio" name="role" value="customer" checked style="display:none">
+          <i class="fas fa-user"></i> <span>عميل</span>
+        </label>
+        <label class="role-opt" onclick="selectRole(this)">
+          <input type="radio" name="role" value="owner" style="display:none">
+          <i class="fas fa-building"></i> <span>صاحب قاعة</span>
+        </label>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem">
+        <div class="form-group">
+          <label>الاسم الأول</label>
+          <input type="text" name="first_name" required style="width:100%; padding:1rem; border-radius:1rem; border:1.5px solid var(--border);">
+        </div>
+        <div class="form-group">
+          <label>اسم العائلة</label>
+          <input type="text" name="last_name" required style="width:100%; padding:1rem; border-radius:1rem; border:1.5px solid var(--border);">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>رقم الهاتف</label>
+        <input type="text" name="phone" required style="width:100%; padding:1rem; border-radius:1rem; border:1.5px solid var(--border);">
+      </div>
+
+      <div class="form-group">
+        <label>البريد الإلكتروني</label>
+        <input type="email" name="email" required style="width:100%; padding:1rem; border-radius:1rem; border:1.5px solid var(--border);">
+      </div>
+
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <input type="password" name="password" required style="width:100%; padding:1rem; border-radius:1rem; border:1.5px solid var(--border);">
+      </div>
+
+      <button type="submit" class="btn-auth">
+        <i class="fas fa-user-plus"></i> إنشاء حساب
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+    document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+  }
+  function selectRole(el) {
+    document.querySelectorAll('.role-opt').forEach(r => r.classList.remove('selected'));
+    el.classList.add('selected');
+    el.querySelector('input').checked = true;
+  }
+</script>
+
+</body>
+</html>

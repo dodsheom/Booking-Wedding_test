@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>فرحتك - منصة حجز قاعات الأفراح والفعاليات</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-pale: #F5EDD5;
+    --dark: #1A1208;
+    --dark-2: #2C1E08;
+    --cream: #FAF6EE;
+    --text: #3D2B0A;
+    --text-light: #7A6040;
+    --white: #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ===== NAVBAR ===== */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 1000;
+    background: rgba(26, 18, 8, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+    padding: 0 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 70px;
+    transition: all 0.3s;
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 900;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-decoration: none;
+  }
+  .logo span { color: var(--white); font-size: 1rem; font-family: 'Cairo', sans-serif; font-weight: 300; display: block; letter-spacing: 4px; margin-top: -5px; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+  .nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-weight: 500; font-size: 0.95rem; transition: color 0.3s; }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-btns { display: flex; gap: 1rem; align-items: center; }
+  .btn-nav-login { color: var(--gold); border: 1px solid var(--gold); padding: 0.5rem 1.5rem; border-radius: 30px; text-decoration: none; font-weight: 600; transition: all 0.3s; font-size: 0.9rem; }
+  .btn-nav-login:hover { background: var(--gold); color: var(--dark); }
+  .btn-nav-reg { background: var(--gold); color: var(--dark); padding: 0.5rem 1.5rem; border-radius: 30px; text-decoration: none; font-weight: 700; transition: all 0.3s; font-size: 0.9rem; }
+  .btn-nav-reg:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 5px 20px rgba(201,168,76,0.4); }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(160deg, var(--dark) 0%, var(--dark-2) 50%, #1A0E05 100%);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+    padding: 100px 5% 60px;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C9A84C' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+  }
+  .hero-orb-1 { width: 600px; height: 600px; background: var(--gold); top: -200px; left: -200px; animation: float 8s ease-in-out infinite; }
+  .hero-orb-2 { width: 400px; height: 400px; background: #8B4513; bottom: -100px; right: -100px; animation: float 10s ease-in-out infinite reverse; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-30px)} }
+
+  .hero-content { text-align: center; position: relative; z-index: 2; max-width: 900px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.4);
+    color: var(--gold-light); padding: 0.5rem 1.5rem; border-radius: 30px;
+    font-size: 0.85rem; font-weight: 600; margin-bottom: 2rem;
+    animation: fadeInDown 0.8s ease both;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 900; color: var(--white);
+    line-height: 1.15; margin-bottom: 1.5rem;
+    animation: fadeInUp 0.8s ease 0.2s both;
+  }
+  .hero-title .gold { color: var(--gold); }
+  .hero-subtitle {
+    font-size: 1.15rem; color: rgba(255,255,255,0.65);
+    max-width: 600px; margin: 0 auto 3rem;
+    line-height: 1.8; font-weight: 400;
+    animation: fadeInUp 0.8s ease 0.4s both;
+  }
+
+  /* Search Box */
+  .search-box {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 20px;
+    padding: 1.5rem;
+    backdrop-filter: blur(20px);
+    animation: fadeInUp 0.8s ease 0.6s both;
+    max-width: 800px; margin: 0 auto 3rem;
+  }
+  .search-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 1rem; align-items: end;
+  }
+  .search-field label {
+    display: block; color: rgba(255,255,255,0.6);
+    font-size: 0.8rem; font-weight: 600;
+    margin-bottom: 0.4rem; letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .search-field input, .search-field select {
+    width: 100%;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(201,168,76,0.2);
+    color: white; padding: 0.75rem 1rem;
+    border-radius: 10px; font-family: 'Cairo', sans-serif;
+    font-size: 0.95rem; outline: none;
+    transition: border-color 0.3s;
+  }
+  .search-field input::placeholder { color: rgba(255,255,255,0.35); }
+  .search-field select option { background: var(--dark); }
+  .search-field input:focus, .search-field select:focus { border-color: var(--gold); }
+  .btn-search {
+    background: var(--gold);
+    color: var(--dark); border: none;
+    padding: 0.75rem 2rem; border-radius: 10px;
+    font-family: 'Cairo', sans-serif; font-size: 1rem;
+    font-weight: 700; cursor: pointer;
+    transition: all 0.3s; white-space: nowrap;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-search:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(201,168,76,0.4); }
+
+  .hero-stats {
+    display: flex; justify-content: center; gap: 3rem;
+    animation: fadeInUp 0.8s ease 0.8s both;
+  }
+  .stat { text-align: center; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 900; color: var(--gold); }
+  .stat-label { color: rgba(255,255,255,0.5); font-size: 0.8rem; font-weight: 500; }
+
+  @keyframes fadeInUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeInDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ===== SECTION HEADER ===== */
+  .section-header { text-align: center; margin-bottom: 4rem; }
+  .section-tag {
+    display: inline-block;
+    background: var(--gold-pale); color: var(--gold);
+    padding: 0.3rem 1.2rem; border-radius: 20px;
+    font-size: 0.8rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 900; color: var(--dark);
+    margin-bottom: 1rem; line-height: 1.3;
+  }
+  .section-title .gold { color: var(--gold); }
+  .section-desc { color: var(--text-light); font-size: 1rem; max-width: 550px; margin: 0 auto; line-height: 1.8; }
+
+  /* ===== FEATURED HALLS ===== */
+  .featured { padding: 100px 5%; background: var(--cream); }
+  .halls-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2rem;
+  }
+  .hall-card {
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid rgba(201,168,76,0.1);
+    box-shadow: 0 4px 20px rgba(44,30,8,0.06);
+  }
+  .hall-card:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(44,30,8,0.15); }
+  .hall-img {
+    height: 220px; position: relative; overflow: hidden;
+    background: linear-gradient(135deg, var(--dark-2), var(--dark));
+  }
+  .hall-img-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 4rem; opacity: 0.3;
+  }
+  .hall-badge {
+    position: absolute; top: 1rem; right: 1rem;
+    background: var(--gold); color: var(--dark);
+    padding: 0.3rem 0.8rem; border-radius: 20px;
+    font-size: 0.75rem; font-weight: 700;
+  }
+  .hall-fav {
+    position: absolute; top: 1rem; left: 1rem;
+    width: 36px; height: 36px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.3s;
+    border: none; color: #ccc; font-size: 1rem;
+  }
+  .hall-fav:hover { color: #e74c3c; transform: scale(1.1); }
+  .hall-body { padding: 1.5rem; }
+  .hall-name { font-size: 1.2rem; font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; }
+  .hall-location { color: var(--text-light); font-size: 0.88rem; display: flex; align-items: center; gap: 0.3rem; margin-bottom: 1rem; }
+  .hall-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .tag {
+    background: var(--gold-pale); color: var(--text-light);
+    padding: 0.25rem 0.75rem; border-radius: 15px;
+    font-size: 0.78rem; font-weight: 600;
+  }
+  .hall-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 1rem; border-top: 1px solid rgba(201,168,76,0.15); }
+  .hall-rating { display: flex; align-items: center; gap: 0.3rem; color: var(--gold); font-weight: 700; font-size: 0.9rem; }
+  .hall-price { text-align: left; }
+  .hall-price .price { font-size: 1.3rem; font-weight: 900; color: var(--dark); font-family: 'Playfair Display', serif; }
+  .hall-price .price-label { font-size: 0.75rem; color: var(--text-light); }
+  .hall-capacity { color: var(--text-light); font-size: 0.82rem; display: flex; align-items: center; gap: 0.3rem; }
+  .btn-book {
+    display: block; width: 100%;
+    background: var(--dark); color: var(--gold);
+    border: 2px solid var(--dark);
+    padding: 0.75rem; border-radius: 10px;
+    text-align: center; text-decoration: none;
+    font-weight: 700; font-size: 0.95rem;
+    margin-top: 1rem; transition: all 0.3s;
+  }
+  .btn-book:hover { background: var(--gold); color: var(--dark); border-color: var(--gold); }
+
+  /* ===== HOW IT WORKS ===== */
+  .how-it-works {
+    padding: 100px 5%;
+    background: linear-gradient(160deg, var(--dark) 0%, var(--dark-2) 100%);
+    position: relative; overflow: hidden;
+  }
+  .how-it-works .section-title { color: var(--white); }
+  .how-it-works .section-desc { color: rgba(255,255,255,0.5); }
+  .how-it-works .section-tag { background: rgba(201,168,76,0.15); color: var(--gold-light); }
+  .steps-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2rem; position: relative; }
+  .steps-grid::before {
+    content: '';
+    position: absolute; top: 45px; right: 12.5%; left: 12.5%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.3;
+  }
+  .step { text-align: center; position: relative; }
+  .step-num {
+    width: 90px; height: 90px;
+    background: rgba(201,168,76,0.1);
+    border: 2px solid rgba(201,168,76,0.3);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 900;
+    color: var(--gold);
+    position: relative; z-index: 1;
+    transition: all 0.3s;
+  }
+  .step:hover .step-num { background: var(--gold); color: var(--dark); transform: scale(1.1); }
+  .step-title { color: var(--white); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .step-desc { color: rgba(255,255,255,0.5); font-size: 0.9rem; line-height: 1.7; }
+
+  /* ===== CATEGORIES ===== */
+  .categories { padding: 100px 5%; background: var(--cream); }
+  .cats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+  .cat-card {
+    border-radius: 20px; overflow: hidden;
+    aspect-ratio: 4/3; position: relative;
+    cursor: pointer;
+    transition: transform 0.4s; 
+  }
+  .cat-card:first-child { grid-row: span 2; aspect-ratio: auto; }
+  .cat-card:hover { transform: scale(1.02); }
+  .cat-bg {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 5rem;
+    transition: all 0.4s;
+  }
+  .cat-card:nth-child(1) .cat-bg { background: linear-gradient(135deg, #1A1208, #3D2B0A); }
+  .cat-card:nth-child(2) .cat-bg { background: linear-gradient(135deg, #0A2E1A, #1A5C34); }
+  .cat-card:nth-child(3) .cat-bg { background: linear-gradient(135deg, #0A0A2E, #1A1A5C); }
+  .cat-card:nth-child(4) .cat-bg { background: linear-gradient(135deg, #2E0A0A, #5C1A1A); }
+  .cat-card:nth-child(5) .cat-bg { background: linear-gradient(135deg, #1A1A1A, #3A3A3A); }
+  .cat-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);
+    display: flex; align-items: flex-end;
+    padding: 1.5rem;
+  }
+  .cat-info h3 { color: var(--white); font-size: 1.2rem; font-weight: 700; }
+  .cat-info span { color: var(--gold-light); font-size: 0.85rem; }
+
+  /* ===== TESTIMONIALS ===== */
+  .testimonials { padding: 100px 5%; background: var(--white); }
+  .testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; }
+  .testi-card {
+    background: var(--cream);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 20px; padding: 2rem;
+    transition: all 0.3s;
+  }
+  .testi-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(44,30,8,0.1); }
+  .testi-stars { color: var(--gold); margin-bottom: 1rem; font-size: 0.9rem; }
+  .testi-text { color: var(--text); line-height: 1.8; font-size: 0.95rem; margin-bottom: 1.5rem; font-style: italic; }
+  .testi-user { display: flex; align-items: center; gap: 1rem; }
+  .testi-avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--gold); display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; color: var(--dark); font-weight: 700;
+  }
+  .testi-name { font-weight: 700; color: var(--dark); font-size: 0.95rem; }
+  .testi-date { color: var(--text-light); font-size: 0.8rem; }
+
+  /* ===== CTA ===== */
+  .cta-section {
+    padding: 100px 5%;
+    background: linear-gradient(135deg, var(--gold) 0%, #8B6914 100%);
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .cta-section::before {
+    content: '💍';
+    position: absolute; font-size: 20rem;
+    opacity: 0.05; right: -5rem; top: -5rem;
+  }
+  .cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 900; color: var(--dark);
+    margin-bottom: 1rem;
+  }
+  .cta-desc { color: rgba(26,18,8,0.7); font-size: 1.1rem; margin-bottom: 2.5rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+  .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-cta-dark {
+    background: var(--dark); color: var(--gold);
+    padding: 1rem 2.5rem; border-radius: 50px;
+    text-decoration: none; font-weight: 700; font-size: 1rem;
+    transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-cta-dark:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(26,18,8,0.3); }
+  .btn-cta-outline {
+    background: transparent; color: var(--dark);
+    border: 2px solid var(--dark);
+    padding: 1rem 2.5rem; border-radius: 50px;
+    text-decoration: none; font-weight: 700; font-size: 1rem;
+    transition: all 0.3s;
+  }
+  .btn-cta-outline:hover { background: var(--dark); color: var(--gold); }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--dark);
+    padding: 60px 5% 30px;
+    color: rgba(255,255,255,0.6);
+  }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 900;
+    color: var(--gold); margin-bottom: 1rem; display: block;
+  }
+  .footer-about { font-size: 0.9rem; line-height: 1.8; margin-bottom: 1.5rem; }
+  .footer-social { display: flex; gap: 0.75rem; }
+  .social-btn {
+    width: 38px; height: 38px;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: var(--gold); text-decoration: none;
+    transition: all 0.3s; font-size: 0.9rem;
+  }
+  .social-btn:hover { background: var(--gold); color: var(--dark); }
+  .footer-col h4 { color: var(--white); font-size: 1rem; font-weight: 700; margin-bottom: 1.2rem; }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+  .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 1.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.85rem;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .search-grid { grid-template-columns: 1fr 1fr; }
+    .btn-search { grid-column: span 2; }
+    .steps-grid { grid-template-columns: repeat(2,1fr); }
+    .steps-grid::before { display: none; }
+    .cats-grid { grid-template-columns: 1fr 1fr; }
+    .cat-card:first-child { grid-row: auto; }
+    .testi-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .hero-stats { gap: 1.5rem; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="index.html" class="logo">فرحتك <span>FARHTAK</span></a>
+  <ul class="nav-links">
+    <li><a href="search.html">استعرض القاعات</a></li>
+    <li><a href="#">المناطق</a></li>
+    <li><a href="#">الخدمات</a></li>
+    <li><a href="#">من نحن</a></li>
+  </ul>
+  <div class="nav-auth">
+  {% if session.get('user_id') %}
+    <span style="color: white; margin-left: 10px;">أهلاً، {{ session.get('name') }}</span>
+    <a href="/logout" class="btn-login" style="background: var(--red); color: white;">خروج</a>
+  {% else %}
+    <a href="login.html" class="btn-login">دخول / تسجيل</a>
+  {% endif %}
+</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-content">
+    <div class="hero-badge"><i class="fas fa-star"></i> أكثر من ٥٠٠ قاعة في مصر</div>
+    <h1 class="hero-title">ابدأ قصة حبك<br>من <span class="gold">المكان المثالي</span></h1>
+    <p class="hero-subtitle">اكتشف أجمل قاعات الأفراح والفعاليات، قارن الأسعار والخدمات، واحجز في ثوانٍ بكل أمان وسهولة.</p>
+
+    <div class="search-box">
+      <div class="search-grid">
+        <div class="search-field">
+          <label>المحافظة</label>
+          <select>
+            <option>اختر المحافظة</option>
+            <option>القاهرة</option>
+            <option>الجيزة</option>
+            <option>الإسكندرية</option>
+            <option>المنصورة</option>
+          </select>
+        </div>
+        <div class="search-field">
+          <label>نوع الفعالية</label>
+          <select>
+            <option>اختر النوع</option>
+            <option>حفل زفاف</option>
+            <option>حفل خطوبة</option>
+            <option>مؤتمر</option>
+            <option>معرض</option>
+          </select>
+        </div>
+        <div class="search-field">
+          <label>عدد المدعوين</label>
+          <input type="number" placeholder="مثال: ٣٠٠">
+        </div>
+        <button class="btn-search" onclick="window.location.href='search.html'">
+          <i class="fas fa-search"></i> ابحث الآن
+        </button>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">+٥٠٠</div><div class="stat-label">قاعة متاحة</div></div>
+      <div class="stat"><div class="stat-num">+١٢ك</div><div class="stat-label">حجز ناجح</div></div>
+      <div class="stat"><div class="stat-num">+٢٥</div><div class="stat-label">مدينة</div></div>
+      <div class="stat"><div class="stat-num">٩٨٪</div><div class="stat-label">رضا العملاء</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED HALLS -->
+<section class="featured">
+  <div class="section-header">
+    <div class="section-tag">✨ الأكثر حجزاً</div>
+    <h2 class="section-title">قاعات <span class="gold">مميزة</span> لمناسباتك</h2>
+    <p class="section-desc">اختر من بين أفضل القاعات المعتمدة بتقييمات حقيقية من عملاء سعداء</p>
+  </div>
+
+  <div class="halls-grid">
+    <!-- Card 1 -->
+    <div class="hall-card">
+      <div class="hall-img">
+        <div class="hall-img-placeholder">🏛️</div>
+        <span class="hall-badge">الأكثر حجزاً</span>
+        <button class="hall-fav"><i class="far fa-heart"></i></button>
+      </div>
+      <div class="hall-body">
+        <h3 class="hall-name">قاعة كراون بالاس</h3>
+        <p class="hall-location"><i class="fas fa-map-marker-alt" style="color:var(--gold)"></i> مدينة نصر، القاهرة</p>
+        <div class="hall-tags">
+          <span class="tag">أفراح</span><span class="tag">مؤتمرات</span><span class="tag">VIP</span>
+        </div>
+        <div class="hall-footer">
+          <div>
+            <div class="hall-rating"><i class="fas fa-star"></i> ٤.٩ <span style="color:var(--text-light);font-weight:400">(٢٣٤ تقييم)</span></div>
+            <div class="hall-capacity" style="margin-top:0.3rem"><i class="fas fa-users"></i> حتى ١٠٠٠ ضيف</div>
+          </div>
+          <div class="hall-price">
+            <div class="price">٢٥،٠٠٠ ج</div>
+            <div class="price-label">يبدأ من / ليلة</div>
+          </div>
+        </div>
+        <a href="booking.html" class="btn-book">احجز الآن</a>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="hall-card">
+      <div class="hall-img">
+        <div class="hall-img-placeholder">🌹</div>
+        <button class="hall-fav"><i class="far fa-heart"></i></button>
+      </div>
+      <div class="hall-body">
+        <h3 class="hall-name">فيلا الياسمين</h3>
+        <p class="hall-location"><i class="fas fa-map-marker-alt" style="color:var(--gold)"></i> الشيخ زايد، الجيزة</p>
+        <div class="hall-tags">
+          <span class="tag">أفراح</span><span class="tag">خطوبة</span><span class="tag">حديقة</span>
+        </div>
+        <div class="hall-footer">
+          <div>
+            <div class="hall-rating"><i class="fas fa-star"></i> ٤.٨ <span style="color:var(--text-light);font-weight:400">(١٨٧ تقييم)</span></div>
+            <div class="hall-capacity" style="margin-top:0.3rem"><i class="fas fa-users"></i> حتى ٥٠٠ ضيف</div>
+          </div>
+          <div class="hall-price">
+            <div class="price">١٨،٠٠٠ ج</div>
+            <div class="price-label">يبدأ من / ليلة</div>
+          </div>
+        </div>
+        <a href="booking.html" class="btn-book">احجز الآن</a>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="hall-card">
+      <div class="hall-img">
+        <div class="hall-img-placeholder">✨</div>
+        <span class="hall-badge" style="background:#e74c3c;color:white">عرض خاص</span>
+        <button class="hall-fav"><i class="far fa-heart"></i></button>
+      </div>
+      <div class="hall-body">
+        <h3 class="hall-name">قاعة النيل الكبرى</h3>
+        <p class="hall-location"><i class="fas fa-map-marker-alt" style="color:var(--gold)"></i> المعادي، القاهرة</p>
+        <div class="hall-tags">
+          <span class="tag">نيل فيو</span><span class="tag">مؤتمرات</span><span class="tag">معارض</span>
+        </div>
+        <div class="hall-footer">
+          <div>
+            <div class="hall-rating"><i class="fas fa-star"></i> ٤.٧ <span style="color:var(--text-light);font-weight:400">(٣١٢ تقييم)</span></div>
+            <div class="hall-capacity" style="margin-top:0.3rem"><i class="fas fa-users"></i> حتى ٨٠٠ ضيف</div>
+          </div>
+          <div class="hall-price">
+            <div class="price">٣٢،٠٠٠ ج</div>
+            <div class="price-label">يبدأ من / ليلة</div>
+          </div>
+        </div>
+        <a href="booking.html" class="btn-book">احجز الآن</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:3rem">
+    <a href="search.html" style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--dark);color:var(--gold);padding:1rem 2.5rem;border-radius:50px;text-decoration:none;font-weight:700;transition:all 0.3s" onmouseover="this.style.background='var(--gold)';this.style.color='var(--dark)'" onmouseout="this.style.background='var(--dark)';this.style.color='var(--gold)'">
+      عرض جميع القاعات <i class="fas fa-arrow-left"></i>
+    </a>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-it-works">
+  <div class="section-header">
+    <div class="section-tag">كيف تعمل المنصة؟</div>
+    <h2 class="section-title" style="color:var(--white)">احجز قاعتك في <span class="gold">٤ خطوات</span> بسيطة</h2>
+    <p class="section-desc" style="color:rgba(255,255,255,0.5)">عملية حجز سهلة وآمنة من البداية للنهاية</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step">
+      <div class="step-num">١</div>
+      <div class="step-title">ابحث وفلتر</div>
+      <div class="step-desc">حدد موقعك، ميزانيتك، وعدد ضيوفك واكتشف القاعات المناسبة</div>
+    </div>
+    <div class="step">
+      <div class="step-num">٢</div>
+      <div class="step-title">قارن واختار</div>
+      <div class="step-desc">اطلع على الصور والتقييمات والخدمات واختر القاعة المثالية</div>
+    </div>
+    <div class="step">
+      <div class="step-num">٣</div>
+      <div class="step-title">احجز وادفع</div>
+      <div class="step-desc">احجز التاريخ المناسب وادفع بأمان عبر بطاقتك أو المحافظ الإلكترونية</div>
+    </div>
+    <div class="step">
+      <div class="step-num">٤</div>
+      <div class="step-title">استمتع بيومك</div>
+      <div class="step-desc">استلم تأكيد الحجز وتذكيرات تلقائية واستمتع بمناسبتك بلا قلق</div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="categories">
+  <div class="section-header">
+    <div class="section-tag">التصنيفات</div>
+    <h2 class="section-title">لكل مناسبة <span class="gold">المكان المناسب</span></h2>
+  </div>
+  <div class="cats-grid">
+    <div class="cat-card">
+      <div class="cat-bg"><span>💍</span></div>
+      <div class="cat-overlay">
+        <div class="cat-info"><h3>حفلات الزفاف</h3><span>+٢٨٠ قاعة متاحة</span></div>
+      </div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-bg"><span>💐</span></div>
+      <div class="cat-overlay">
+        <div class="cat-info"><h3>حفلات الخطوبة</h3><span>+١٥٠ قاعة متاحة</span></div>
+      </div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-bg"><span>🎤</span></div>
+      <div class="cat-overlay">
+        <div class="cat-info"><h3>مؤتمرات وملتقيات</h3><span>+٩٠ قاعة متاحة</span></div>
+      </div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-bg"><span>🎂</span></div>
+      <div class="cat-overlay">
+        <div class="cat-info"><h3>حفلات التخرج</h3><span>+١٢٠ قاعة متاحة</span></div>
+      </div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-bg"><span>🖼️</span></div>
+      <div class="cat-overlay">
+        <div class="cat-info"><h3>معارض وفعاليات</h3><span>+٦٠ قاعة متاحة</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="section-header">
+    <div class="section-tag">آراء عملائنا</div>
+    <h2 class="section-title">ماذا قالوا عن <span class="gold">فرحتك</span>؟</h2>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"تجربة رائعة جداً! حجزنا قاعة الزفاف في خلال دقائق وكان كل شيء بالضبط كما وصفوه. شكراً فرحتك على يوم لا يُنسى."</p>
+      <div class="testi-user">
+        <div class="testi-avatar">م</div>
+        <div><div class="testi-name">محمد وسارة</div><div class="testi-date">مارس ٢٠٢٦</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"المنصة سهلت علينا كثيراً. قدرنا نقارن بين ٢٠ قاعة في وقت قصير ووجدنا القاعة المثالية لحفل خطوبتنا بالميزانية المناسبة."</p>
+      <div class="testi-user">
+        <div class="testi-avatar">ن</div>
+        <div><div class="testi-name">نور وأحمد</div><div class="testi-date">فبراير ٢٠٢٦</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★☆</div>
+      <p class="testi-text">"استخدمنا الموقع لحجز قاعة مؤتمر لشركتنا وكانت التجربة ممتازة. نظام الدفع آمن والتواصل مع صاحب القاعة كان سهلاً جداً."</p>
+      <div class="testi-user">
+        <div class="testi-avatar">ه</div>
+        <div><div class="testi-name">هاني رضوان</div><div class="testi-date">يناير ٢٠٢٦</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2 class="cta-title">أنت صاحب قاعة؟ انضم إلينا!</h2>
+  <p class="cta-desc">سجّل قاعتك الآن واوصل إلى آلاف العملاء الباحثين عن المكان المثالي لمناسباتهم</p>
+  <div class="cta-btns">
+    <a href="dashboard.html" class="btn-cta-dark"><i class="fas fa-building"></i> سجّل قاعتك مجاناً</a>
+    <a href="#" class="btn-cta-outline">تعرف على المزيد</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <span class="footer-logo">فرحتك</span>
+      <p class="footer-about">منصة فرحتك هي الوجهة الأولى في مصر لحجز قاعات الأفراح والفعاليات. نربط بين أصحاب القاعات والعملاء بطريقة سهلة وآمنة وشفافة.</p>
+      <div class="footer-social">
+        <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-btn"><i class="fab fa-tiktok"></i></a>
+        <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>الموقع</h4>
+      <ul class="footer-links">
+        <li><a href="search.html">ابحث عن قاعة</a></li>
+        <li><a href="#">القاعات المميزة</a></li>
+        <li><a href="#">الأسعار والعروض</a></li>
+        <li><a href="#">من نحن</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>للعملاء</h4>
+      <ul class="footer-links">
+        <li><a href="login.html">إنشاء حساب</a></li>
+        <li><a href="#">كيف تحجز؟</a></li>
+        <li><a href="#">سياسة الإلغاء</a></li>
+        <li><a href="#">الأسئلة الشائعة</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>لأصحاب القاعات</h4>
+      <ul class="footer-links">
+        <li><a href="dashboard.html">لوحة التحكم</a></li>
+        <li><a href="#">سجّل قاعتك</a></li>
+        <li><a href="#">إدارة الحجوزات</a></li>
+        <li><a href="#">التواصل معنا</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© ٢٠٢٦ فرحتك - جميع الحقوق محفوظة</span>
+    <span>مشروع تخرج - كلية الدراسات الإحصائية والبحوث - جامعة القاهرة</span>
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll effect
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    if(window.scrollY > 50) { nav.style.background = 'rgba(26,18,8,0.98)'; }
+    else { nav.style.background = 'rgba(26,18,8,0.95)'; }
+  });
+
+  // Favorite toggle
+  document.querySelectorAll('.hall-fav').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const icon = this.querySelector('i');
+      if(icon.classList.contains('far')) {
+        icon.classList.replace('far','fas');
+        this.style.color = '#e74c3c';
+      } else {
+        icon.classList.replace('fas','far');
+        this.style.color = '#ccc';
+      }
+    });
+  });
+</script>
+</body>
+</html>

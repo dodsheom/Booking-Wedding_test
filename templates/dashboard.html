@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة تحكم صاحب القاعة - فرحتك</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --gold: #C9A84C; --gold-light: #E8C97A; --gold-pale: #F5EDD5;
+    --dark: #1A1208; --dark-2: #2C1E08; --cream: #FAF6EE;
+    --text: #3D2B0A; --text-light: #7A6040; --white: #FFFFFF;
+    --border: rgba(201,168,76,0.15);
+    --green: #27ae60; --red: #e74c3c; --blue: #2980b9; --orange: #e67e22;
+    --sidebar-w: 260px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Cairo', sans-serif; background: #F0EBE0; color: var(--text); display: flex; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: var(--sidebar-w); height: 100vh; position: fixed;
+    right: 0; top: 0; z-index: 200;
+    background: var(--dark);
+    display: flex; flex-direction: column;
+    overflow-y: auto;
+  }
+  .sidebar-logo { padding: 1.5rem; border-bottom: 1px solid rgba(201,168,76,0.15); }
+  .sidebar-logo a { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; color: var(--gold); text-decoration: none; }
+  .sidebar-logo span { display: block; color: rgba(255,255,255,0.4); font-size: 0.7rem; font-family: 'Cairo', sans-serif; margin-top: 0.2rem; letter-spacing: 2px; }
+
+  .sidebar-user { padding: 1.2rem 1.5rem; border-bottom: 1px solid rgba(201,168,76,0.1); display: flex; align-items: center; gap: 0.8rem; }
+  .user-avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--dark); font-size: 1.1rem; flex-shrink: 0; }
+  .user-name { color: white; font-weight: 700; font-size: 0.9rem; }
+  .user-role { color: var(--gold-light); font-size: 0.75rem; }
+
+  .sidebar-nav { padding: 1rem 0; flex: 1; }
+  .nav-section { margin-bottom: 0.5rem; }
+  .nav-section-label { padding: 0.5rem 1.5rem; color: rgba(255,255,255,0.3); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
+  .nav-item {
+    display: flex; align-items: center; gap: 0.8rem;
+    padding: 0.75rem 1.5rem; color: rgba(255,255,255,0.6);
+    text-decoration: none; transition: all 0.2s; cursor: pointer;
+    font-size: 0.9rem; font-weight: 500; position: relative;
+  }
+  .nav-item:hover { color: white; background: rgba(255,255,255,0.05); }
+  .nav-item.active { color: var(--gold); background: rgba(201,168,76,0.1); }
+  .nav-item.active::before { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 3px; background: var(--gold); border-radius: 3px 0 0 3px; }
+  .nav-item i { width: 18px; text-align: center; font-size: 0.95rem; }
+  .nav-badge { margin-right: auto; background: var(--red); color: white; padding: 0.1rem 0.5rem; border-radius: 10px; font-size: 0.7rem; font-weight: 700; }
+  .nav-badge.gold { background: var(--gold); color: var(--dark); }
+
+  .sidebar-footer { padding: 1rem 1.5rem; border-top: 1px solid rgba(201,168,76,0.1); }
+  .logout-btn { display: flex; align-items: center; gap: 0.6rem; color: rgba(255,255,255,0.4); font-size: 0.88rem; cursor: pointer; transition: color 0.2s; text-decoration: none; }
+  .logout-btn:hover { color: var(--red); }
+
+  /* MAIN */
+  .main {
+    margin-right: var(--sidebar-w);
+    flex: 1; min-height: 100vh;
+    display: flex; flex-direction: column;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--white); height: 64px;
+    padding: 0 2rem; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 10px rgba(44,30,8,0.05);
+  }
+  .page-title { font-size: 1.1rem; font-weight: 700; color: var(--dark); }
+  .topbar-right { display: flex; align-items: center; gap: 1rem; }
+  .notif-btn {
+    width: 38px; height: 38px; border-radius: 10px;
+    border: 1px solid var(--border); background: var(--cream);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--text-light); position: relative;
+    transition: all 0.2s;
+  }
+  .notif-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .notif-dot { position: absolute; top: 6px; left: 6px; width: 8px; height: 8px; background: var(--red); border-radius: 50%; border: 2px solid white; }
+  .topbar-user { display: flex; align-items: center; gap: 0.6rem; cursor: pointer; }
+  .topbar-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--dark); font-size: 0.9rem; }
+
+  /* CONTENT */
+  .content { padding: 2rem; flex: 1; }
+
+  /* STATS */
+  .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; margin-bottom: 2rem; }
+  .stat-card {
+    background: var(--white); border-radius: 16px;
+    padding: 1.5rem; border: 1px solid var(--border);
+    display: flex; align-items: center; gap: 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(44,30,8,0.04);
+  }
+  .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(44,30,8,0.1); }
+  .stat-icon {
+    width: 56px; height: 56px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; flex-shrink: 0;
+  }
+  .stat-icon.gold { background: var(--gold-pale); }
+  .stat-icon.green { background: rgba(39,174,96,0.1); }
+  .stat-icon.blue { background: rgba(41,128,185,0.1); }
+  .stat-icon.orange { background: rgba(230,126,34,0.1); }
+  .stat-info .stat-num { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--dark); line-height: 1; }
+  .stat-info .stat-label { color: var(--text-light); font-size: 0.82rem; margin-top: 0.2rem; }
+  .stat-info .stat-change { font-size: 0.78rem; margin-top: 0.3rem; display: flex; align-items: center; gap: 0.2rem; }
+  .stat-change.up { color: var(--green); }
+  .stat-change.down { color: var(--red); }
+
+  /* CONTENT GRID */
+  .content-grid { display: grid; grid-template-columns: 1fr 360px; gap: 1.5rem; margin-bottom: 1.5rem; }
+
+  /* BOOKINGS TABLE */
+  .card { background: var(--white); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 2px 8px rgba(44,30,8,0.04); }
+  .card-header { padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .card-header h3 { font-size: 0.98rem; font-weight: 700; color: var(--dark); display: flex; align-items: center; gap: 0.5rem; }
+  .card-header h3 i { color: var(--gold); }
+  .view-all { color: var(--gold); font-size: 0.82rem; font-weight: 600; text-decoration: none; }
+
+  table { width: 100%; border-collapse: collapse; }
+  th { background: var(--cream); padding: 0.8rem 1.2rem; text-align: right; font-size: 0.78rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; }
+  td { padding: 1rem 1.2rem; border-top: 1px solid var(--border); font-size: 0.88rem; }
+  tr:hover td { background: rgba(245,237,213,0.5); }
+  .booking-id { font-weight: 700; color: var(--dark); font-size: 0.82rem; }
+  .client-info { display: flex; align-items: center; gap: 0.6rem; }
+  .client-av { width: 32px; height: 32px; border-radius: 50%; background: var(--gold-pale); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--gold); font-size: 0.85rem; }
+  .client-name { font-weight: 600; color: var(--dark); font-size: 0.88rem; }
+  .client-phone { color: var(--text-light); font-size: 0.78rem; }
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.25rem 0.7rem; border-radius: 20px;
+    font-size: 0.78rem; font-weight: 700;
+  }
+  .status-badge.confirmed { background: rgba(39,174,96,0.1); color: var(--green); }
+  .status-badge.pending { background: rgba(230,126,34,0.1); color: var(--orange); }
+  .status-badge.cancelled { background: rgba(231,76,60,0.1); color: var(--red); }
+  .action-btns { display: flex; gap: 0.4rem; }
+  .action-btn { width: 30px; height: 30px; border-radius: 7px; border: 1px solid var(--border); background: var(--cream); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-light); font-size: 0.85rem; transition: all 0.2s; }
+  .action-btn:hover { background: var(--dark); color: var(--gold); border-color: var(--dark); }
+  .action-btn.approve:hover { background: var(--green); color: white; border-color: var(--green); }
+  .action-btn.reject:hover { background: var(--red); color: white; border-color: var(--red); }
+
+  /* MINI CALENDAR */
+  .mini-cal { padding: 1.5rem; }
+  .mini-cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+  .mini-month { font-weight: 700; font-size: 0.95rem; }
+  .mini-nav { display: flex; gap: 0.3rem; }
+  .mini-nav button { width: 26px; height: 26px; border: 1px solid var(--border); background: var(--cream); border-radius: 6px; cursor: pointer; color: var(--text-light); font-size: 0.75rem; }
+  .mini-cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; text-align: center; font-size: 0.8rem; }
+  .mini-cal-day-name { color: var(--text-light); padding: 0.3rem; font-size: 0.72rem; font-weight: 700; }
+  .mini-day { padding: 0.35rem; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
+  .mini-day:hover { background: var(--gold-pale); }
+  .mini-day.today { background: var(--gold); color: var(--dark); font-weight: 700; }
+  .mini-day.has-event { position: relative; }
+  .mini-day.has-event::after { content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: var(--gold); }
+  .mini-day.today.has-event::after { background: var(--dark); }
+  .mini-day.booked { background: rgba(231,76,60,0.1); color: var(--red); font-weight: 600; }
+
+  /* UPCOMING EVENTS */
+  .events-list { padding: 0 1.5rem 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; }
+  .event-item { display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem; background: var(--cream); border-radius: 10px; border-right: 3px solid var(--gold); }
+  .event-date { text-align: center; min-width: 40px; }
+  .event-day { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 900; color: var(--dark); line-height: 1; }
+  .event-month { font-size: 0.72rem; color: var(--text-light); font-weight: 600; }
+  .event-info { flex: 1; }
+  .event-name { font-weight: 700; font-size: 0.88rem; color: var(--dark); }
+  .event-sub { color: var(--text-light); font-size: 0.78rem; }
+  .event-badge { font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 10px; }
+  .event-badge.zafaf { background: rgba(201,168,76,0.15); color: var(--gold); }
+  .event-badge.conf { background: rgba(41,128,185,0.1); color: var(--blue); }
+
+  /* HALL CARDS */
+  .halls-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+  .hall-mgmt-card {
+    background: var(--white); border-radius: 16px;
+    border: 1px solid var(--border); overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .hall-mgmt-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(44,30,8,0.1); }
+  .hall-img { height: 160px; background: linear-gradient(135deg, var(--dark-2), var(--dark)); display: flex; align-items: center; justify-content: center; font-size: 3.5rem; opacity: 0.5; position: relative; }
+  .hall-status-badge { position: absolute; top: 0.8rem; right: 0.8rem; padding: 0.2rem 0.7rem; border-radius: 15px; font-size: 0.72rem; font-weight: 700; }
+  .hall-status-badge.active { background: rgba(39,174,96,0.9); color: white; }
+  .hall-status-badge.inactive { background: rgba(231,76,60,0.9); color: white; }
+  .hall-mgmt-body { padding: 1.2rem; }
+  .hall-mgmt-name { font-weight: 700; font-size: 1rem; color: var(--dark); margin-bottom: 0.3rem; }
+  .hall-mgmt-stats { display: flex; gap: 1rem; margin: 0.8rem 0; }
+  .hmstat { text-align: center; flex: 1; background: var(--cream); padding: 0.5rem; border-radius: 8px; }
+  .hmstat-num { font-weight: 900; font-size: 1.1rem; color: var(--dark); }
+  .hmstat-label { font-size: 0.7rem; color: var(--text-light); }
+  .hall-mgmt-actions { display: flex; gap: 0.5rem; }
+  .btn-edit { flex: 1; padding: 0.5rem; border: 1px solid var(--border); border-radius: 8px; background: var(--cream); font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.82rem; cursor: pointer; color: var(--text); transition: all 0.2s; }
+  .btn-edit:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-manage { flex: 1; padding: 0.5rem; background: var(--dark); border: none; border-radius: 8px; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.82rem; cursor: pointer; color: var(--gold); transition: all 0.2s; }
+  .btn-manage:hover { background: var(--gold); color: var(--dark); }
+  .btn-add-hall {
+    background: var(--gold); color: var(--dark);
+    border: none; padding: 0.6rem 1.2rem; border-radius: 10px;
+    font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.88rem;
+    cursor: pointer; display: flex; align-items: center; gap: 0.5rem;
+    transition: all 0.2s;
+  }
+  .btn-add-hall:hover { background: var(--gold-light); }
+
+  /* REVENUE CHART placeholder */
+  .chart-area { padding: 1.5rem; }
+  .chart-placeholder { height: 200px; background: var(--cream); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-light); font-size: 0.9rem; position: relative; overflow: hidden; }
+  .chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 150px; padding: 0 1rem; }
+  .bar { flex: 1; border-radius: 6px 6px 0 0; background: var(--gold); opacity: 0.7; transition: opacity 0.2s; min-width: 20px; }
+  .bar:hover { opacity: 1; }
+
+  @media (max-width: 1024px) {
+    .stats-grid { grid-template-columns: repeat(2,1fr); }
+    .content-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { margin-right: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <a href="index.html">فرحتك</a>
+    <span>HALL OWNER PORTAL</span>
+  </div>
+
+  <div class="sidebar-user">
+    <div class="user-avatar">م</div>
+    <div>
+      <div class="user-name">محمد العطار</div>
+      <div class="user-role">صاحب قاعة</div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section">
+      <div class="nav-section-label">الرئيسية</div>
+      <a class="nav-item active" onclick="showSection('overview', this)"><i class="fas fa-home"></i> نظرة عامة</a>
+      <a class="nav-item" onclick="showSection('bookings', this)"><i class="fas fa-calendar-check"></i> الحجوزات <span class="nav-badge">٣</span></a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-label">إدارة القاعات</div>
+      <a class="nav-item" onclick="showSection('halls', this)"><i class="fas fa-building"></i> قاعاتي</a>
+      <a class="nav-item" onclick="showSection('availability', this)"><i class="fas fa-calendar-alt"></i> التقويم</a>
+      <a class="nav-item" onclick="showSection('services', this)"><i class="fas fa-concierge-bell"></i> الخدمات</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-label">الأداء</div>
+      <a class="nav-item" onclick="showSection('revenue', this)"><i class="fas fa-chart-line"></i> الإيرادات</a>
+      <a class="nav-item" onclick="showSection('reviews', this)"><i class="fas fa-star"></i> التقييمات <span class="nav-badge gold">٥</span></a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-label">الحساب</div>
+      <a class="nav-item" onclick="showSection('profile', this)"><i class="fas fa-user-cog"></i> الملف الشخصي</a>
+      <a class="nav-item" onclick="showSection('notifications', this)"><i class="fas fa-bell"></i> الإشعارات <span class="nav-badge">٧</span></a>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <a href="index.html" class="logout-btn"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="page-title" id="pageTitle">نظرة عامة</div>
+    <div class="topbar-right">
+      <div class="notif-btn"><i class="fas fa-bell"></i><div class="notif-dot"></div></div>
+      <div class="topbar-user">
+        <div class="topbar-avatar">م</div>
+        <span style="font-weight:600;font-size:0.88rem">محمد العطار</span>
+        <i class="fas fa-chevron-down" style="font-size:0.7rem;color:var(--text-light)"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- OVERVIEW SECTION -->
+    <div id="section-overview">
+      <!-- STATS -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon gold"><i class="fas fa-calendar-check" style="color:var(--gold)"></i></div>
+          <div class="stat-info">
+            <div class="stat-num">٤٨</div>
+            <div class="stat-label">حجز هذا الشهر</div>
+            <div class="stat-change up"><i class="fas fa-arrow-up"></i> +١٢٪ عن الشهر الماضي</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="fas fa-money-bill-wave" style="color:var(--green)"></i></div>
+          <div class="stat-info">
+            <div class="stat-num">١.٢م</div>
+            <div class="stat-label">إجمالي الإيرادات (ج)</div>
+            <div class="stat-change up"><i class="fas fa-arrow-up"></i> +٨٪ نمو</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue"><i class="fas fa-star" style="color:var(--blue)"></i></div>
+          <div class="stat-info">
+            <div class="stat-num">٤.٩</div>
+            <div class="stat-label">متوسط التقييم</div>
+            <div class="stat-change up"><i class="fas fa-arrow-up"></i> ٢٣٤ تقييم</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon orange"><i class="fas fa-clock" style="color:var(--orange)"></i></div>
+          <div class="stat-info">
+            <div class="stat-num">٣</div>
+            <div class="stat-label">حجوزات معلقة</div>
+            <div class="stat-change down"><i class="fas fa-exclamation-circle"></i> تحتاج موافقة</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOOKINGS + CALENDAR -->
+      <div class="content-grid">
+        <!-- Bookings Table -->
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fas fa-list-ul"></i> أحدث الحجوزات</h3>
+            <a href="#" class="view-all" onclick="showSection('bookings',null)">عرض الكل</a>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>رقم الحجز</th>
+                <th>العميل</th>
+                <th>القاعة</th>
+                <th>التاريخ</th>
+                <th>المبلغ</th>
+                <th>الحالة</th>
+                <th>إجراء</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="booking-id">#FRH-04892</div></td>
+                <td><div class="client-info"><div class="client-av">م</div><div><div class="client-name">محمد وسارة</div><div class="client-phone">01012345678</div></div></div></td>
+                <td>كراون بالاس</td>
+                <td>١٥ مارس ٢٠٢٦</td>
+                <td style="font-weight:700;color:var(--green)">٣٣،٣٠٠ ج</td>
+                <td><span class="status-badge confirmed">✓ مؤكد</span></td>
+                <td><div class="action-btns"><button class="action-btn" title="تفاصيل"><i class="fas fa-eye"></i></button><button class="action-btn" title="رسالة"><i class="fas fa-comment"></i></button></div></td>
+              </tr>
+              <tr>
+                <td><div class="booking-id">#FRH-04893</div></td>
+                <td><div class="client-info"><div class="client-av">ن</div><div><div class="client-name">نور وأحمد</div><div class="client-phone">01098765432</div></div></div></td>
+                <td>كراون بالاس</td>
+                <td>٢٢ مارس ٢٠٢٦</td>
+                <td style="font-weight:700;color:var(--orange)">٢٥،٠٠٠ ج</td>
+                <td><span class="status-badge pending">⏳ معلق</span></td>
+                <td><div class="action-btns"><button class="action-btn approve" title="قبول"><i class="fas fa-check"></i></button><button class="action-btn reject" title="رفض"><i class="fas fa-times"></i></button></div></td>
+              </tr>
+              <tr>
+                <td><div class="booking-id">#FRH-04894</div></td>
+                <td><div class="client-info"><div class="client-av">ه</div><div><div class="client-name">هاني رضوان</div><div class="client-phone">01155566778</div></div></div></td>
+                <td>فيلا الياسمين</td>
+                <td>٢٨ مارس ٢٠٢٦</td>
+                <td style="font-weight:700;color:var(--green)">١٨،٠٠٠ ج</td>
+                <td><span class="status-badge confirmed">✓ مؤكد</span></td>
+                <td><div class="action-btns"><button class="action-btn"><i class="fas fa-eye"></i></button><button class="action-btn"><i class="fas fa-comment"></i></button></div></td>
+              </tr>
+              <tr>
+                <td><div class="booking-id">#FRH-04891</div></td>
+                <td><div class="client-info"><div class="client-av">س</div><div><div class="client-name">سارة كمال</div><div class="client-phone">01222333444</div></div></div></td>
+                <td>كراون بالاس</td>
+                <td>٥ مارس ٢٠٢٦</td>
+                <td style="font-weight:700;color:var(--red)">٣٠،٠٠٠ ج</td>
+                <td><span class="status-badge cancelled">✗ ملغي</span></td>
+                <td><div class="action-btns"><button class="action-btn"><i class="fas fa-eye"></i></button></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- CALENDAR + EVENTS -->
+        <div>
+          <div class="card" style="margin-bottom:1.5rem">
+            <div class="card-header"><h3><i class="fas fa-calendar"></i> التقويم</h3></div>
+            <div class="mini-cal">
+              <div class="mini-cal-header">
+                <span class="mini-month">مارس ٢٠٢٦</span>
+                <div class="mini-nav">
+                  <button><i class="fas fa-chevron-right"></i></button>
+                  <button><i class="fas fa-chevron-left"></i></button>
+                </div>
+              </div>
+              <div class="mini-cal-grid">
+                <div class="mini-cal-day-name">أح</div><div class="mini-cal-day-name">إث</div><div class="mini-cal-day-name">ثل</div><div class="mini-cal-day-name">أر</div><div class="mini-cal-day-name">خم</div><div class="mini-cal-day-name">جم</div><div class="mini-cal-day-name">سب</div>
+                <div class="mini-day">١</div><div class="mini-day booked">٢</div><div class="mini-day">٣</div><div class="mini-day">٤</div><div class="mini-day booked">٥</div><div class="mini-day">٦</div><div class="mini-day">٧</div>
+                <div class="mini-day">٨</div><div class="mini-day">٩</div><div class="mini-day today has-event">١٠</div><div class="mini-day">١١</div><div class="mini-day">١٢</div><div class="mini-day booked">١٣</div><div class="mini-day">١٤</div>
+                <div class="mini-day booked">١٥</div><div class="mini-day">١٦</div><div class="mini-day">١٧</div><div class="mini-day">١٨</div><div class="mini-day">١٩</div><div class="mini-day">٢٠</div><div class="mini-day has-event">٢١</div>
+                <div class="mini-day booked">٢٢</div><div class="mini-day">٢٣</div><div class="mini-day">٢٤</div><div class="mini-day">٢٥</div><div class="mini-day">٢٦</div><div class="mini-day">٢٧</div><div class="mini-day booked">٢٨</div>
+                <div class="mini-day">٢٩</div><div class="mini-day">٣٠</div><div class="mini-day">٣١</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h3><i class="fas fa-clock"></i> الحجوزات القادمة</h3></div>
+            <div class="events-list">
+              <div class="event-item">
+                <div class="event-date"><div class="event-day">١٥</div><div class="event-month">مارس</div></div>
+                <div class="event-info"><div class="event-name">حفل زفاف - محمد وسارة</div><div class="event-sub">٣٠٠ ضيف · ٨ م</div></div>
+                <span class="event-badge zafaf">زفاف</span>
+              </div>
+              <div class="event-item">
+                <div class="event-date"><div class="event-day">٢٢</div><div class="event-month">مارس</div></div>
+                <div class="event-info"><div class="event-name">حفل خطوبة - نور وأحمد</div><div class="event-sub">١٥٠ ضيف · ٧ م</div></div>
+                <span class="event-badge zafaf">خطوبة</span>
+              </div>
+              <div class="event-item">
+                <div class="event-date"><div class="event-day">٢٨</div><div class="event-month">مارس</div></div>
+                <div class="event-info"><div class="event-name">مؤتمر - هاني رضوان</div><div class="event-sub">٢٠٠ ضيف · ٩ ص</div></div>
+                <span class="event-badge conf">مؤتمر</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MY HALLS -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fas fa-building"></i> قاعاتي (٢)</h3>
+          <button class="btn-add-hall"><i class="fas fa-plus"></i> إضافة قاعة جديدة</button>
+        </div>
+        <div style="padding:1.5rem">
+          <div class="halls-grid">
+            <div class="hall-mgmt-card">
+              <div class="hall-img">🏛️<span class="hall-status-badge active">نشطة</span></div>
+              <div class="hall-mgmt-body">
+                <div class="hall-mgmt-name">قاعة كراون بالاس</div>
+                <div style="color:var(--text-light);font-size:0.8rem;margin-bottom:0.5rem">مدينة نصر، القاهرة</div>
+                <div class="hall-mgmt-stats">
+                  <div class="hmstat"><div class="hmstat-num">٣٢</div><div class="hmstat-label">حجز</div></div>
+                  <div class="hmstat"><div class="hmstat-num">٤.٩</div><div class="hmstat-label">تقييم</div></div>
+                  <div class="hmstat"><div class="hmstat-num">٨٥٪</div><div class="hmstat-label">إشغال</div></div>
+                </div>
+                <div class="hall-mgmt-actions">
+                  <button class="btn-edit"><i class="fas fa-edit"></i> تعديل</button>
+                  <button class="btn-manage"><i class="fas fa-cog"></i> إدارة</button>
+                </div>
+              </div>
+            </div>
+            <div class="hall-mgmt-card">
+              <div class="hall-img">🌹<span class="hall-status-badge active">نشطة</span></div>
+              <div class="hall-mgmt-body">
+                <div class="hall-mgmt-name">فيلا الياسمين</div>
+                <div style="color:var(--text-light);font-size:0.8rem;margin-bottom:0.5rem">الشيخ زايد، الجيزة</div>
+                <div class="hall-mgmt-stats">
+                  <div class="hmstat"><div class="hmstat-num">١٦</div><div class="hmstat-label">حجز</div></div>
+                  <div class="hmstat"><div class="hmstat-num">٤.٨</div><div class="hmstat-label">تقييم</div></div>
+                  <div class="hmstat"><div class="hmstat-num">٦٠٪</div><div class="hmstat-label">إشغال</div></div>
+                </div>
+                <div class="hall-mgmt-actions">
+                  <button class="btn-edit"><i class="fas fa-edit"></i> تعديل</button>
+                  <button class="btn-manage"><i class="fas fa-cog"></i> إدارة</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOOKINGS SECTION (hidden by default) -->
+    <div id="section-bookings" style="display:none">
+      <div class="card">
+        <div class="card-header"><h3><i class="fas fa-calendar-check"></i> جميع الحجوزات</h3>
+          <div style="display:flex;gap:0.5rem">
+            <select style="border:1px solid var(--border);background:var(--cream);padding:0.4rem 0.8rem;border-radius:8px;font-family:'Cairo',sans-serif;font-size:0.82rem;color:var(--text);outline:none"><option>كل الحالات</option><option>مؤكد</option><option>معلق</option><option>ملغي</option></select>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr><th>رقم الحجز</th><th>العميل</th><th>القاعة</th><th>التاريخ</th><th>المبلغ</th><th>الحالة</th><th>إجراء</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><div class="booking-id">#FRH-04892</div></td><td><div class="client-info"><div class="client-av">م</div><div><div class="client-name">محمد وسارة</div><div class="client-phone">٣٠٠ ضيف · زفاف</div></div></div></td><td>كراون بالاس</td><td>١٥ مارس ٢٠٢٦</td><td style="font-weight:700;color:var(--green)">٣٣،٣٠٠ ج</td><td><span class="status-badge confirmed">✓ مؤكد</span></td><td><div class="action-btns"><button class="action-btn"><i class="fas fa-eye"></i></button><button class="action-btn"><i class="fas fa-comment"></i></button><button class="action-btn"><i class="fas fa-print"></i></button></div></td></tr>
+            <tr><td><div class="booking-id">#FRH-04893</div></td><td><div class="client-info"><div class="client-av">ن</div><div><div class="client-name">نور وأحمد</div><div class="client-phone">١٥٠ ضيف · خطوبة</div></div></div></td><td>كراون بالاس</td><td>٢٢ مارس ٢٠٢٦</td><td style="font-weight:700;color:var(--orange)">٢٥،٠٠٠ ج</td><td><span class="status-badge pending">⏳ معلق</span></td><td><div class="action-btns"><button class="action-btn approve"><i class="fas fa-check"></i></button><button class="action-btn reject"><i class="fas fa-times"></i></button></div></td></tr>
+            <tr><td><div class="booking-id">#FRH-04894</div></td><td><div class="client-info"><div class="client-av">ه</div><div><div class="client-name">هاني رضوان</div><div class="client-phone">٢٠٠ ضيف · مؤتمر</div></div></div></td><td>فيلا الياسمين</td><td>٢٨ مارس ٢٠٢٦</td><td style="font-weight:700;color:var(--green)">١٨،٠٠٠ ج</td><td><span class="status-badge confirmed">✓ مؤكد</span></td><td><div class="action-btns"><button class="action-btn"><i class="fas fa-eye"></i></button></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- OTHER SECTIONS placeholder -->
+    <div id="section-halls" style="display:none"><div class="card" style="padding:3rem;text-align:center"><div style="font-size:3rem;margin-bottom:1rem">🏛️</div><p style="color:var(--text-light)">إدارة القاعات — قريباً</p></div></div>
+    <div id="section-availability" style="display:none"><div class="card" style="padding:3rem;text-align:center"><div style="font-size:3rem;margin-bottom:1rem">📅</div><p style="color:var(--text-light)">إدارة التقويم والتواريخ — قريباً</p></div></div>
+    <div id="section-services" style="display:none"><div class="card" style="padding:3rem;text-align:center"><div style="font-size:3rem;margin-bottom:1rem">🍽️</div><p style="color:var(--text-light)">إدارة الخدمات الإضافية — قريباً</p></div></div>
+    <div id="section-revenue" style="display:none"><div class="card" style="padding:3rem;text-align:center"><div style="font-size:3rem;margin-bottom:1rem">💰</div><p style="color:var(--text-light)">تقارير الإيرادات — قريباً</p></div></div>
+    <div id="section-reviews" style="display:none"><div class="card" style="padding:3rem;text-align:center"><div style="font-size:3rem;margin-bottom:1rem">⭐</div><p style="color:var(--text-light)">إدارة التقييمات — قريباً</p></div></div>
+    <div id="section-profile" style="display:none"><div class="card" style="padding:3rem;text-align:center"><div style="font-size:3rem;margin-bottom:1rem">👤</div><p style="color:var(--text-light)">الملف الشخصي — قريباً</p></div></div>
+    <div id="section-notifications" style="display:none"><div class="card" style="padding:3rem;text-align:center"><div style="font-size:3rem;margin-bottom:1rem">🔔</div><p style="color:var(--text-light)">مركز الإشعارات — قريباً</p></div></div>
+  </div>
+</div>
+
+<script>
+  const titles = {
+    overview: 'نظرة عامة', bookings: 'الحجوزات', halls: 'قاعاتي',
+    availability: 'التقويم', services: 'الخدمات', revenue: 'الإيرادات',
+    reviews: 'التقييمات', profile: 'الملف الشخصي', notifications: 'الإشعارات'
+  };
+
+  function showSection(name, navEl) {
+    document.querySelectorAll('[id^="section-"]').forEach(s => s.style.display = 'none');
+    document.getElementById('section-' + name).style.display = 'block';
+    document.getElementById('pageTitle').textContent = titles[name];
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    if(navEl) navEl.classList.add('active');
+  }
+</script>
+</body>
+</html>
