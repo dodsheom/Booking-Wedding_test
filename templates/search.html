@@ -257,11 +257,11 @@
 <!-- SEARCH BAR -->
 <div class="search-top">
   <div class="search-top-inner">
-    <input type="text" placeholder="🔍  ابحث عن قاعة، منطقة، خدمة...">
+    <input id="searchQuery" type="text" placeholder="🔍  ابحث عن قاعة، منطقة، خدمة...">
     <select><option>كل المحافظات</option><option>القاهرة</option><option>الجيزة</option><option>الإسكندرية</option></select>
     <select><option>نوع الفعالية</option><option>زفاف</option><option>خطوبة</option><option>مؤتمر</option><option>تخرج</option></select>
     <select><option>التاريخ</option><option>هذا الأسبوع</option><option>هذا الشهر</option><option>اختر تاريخاً</option></select>
-    <button class="btn-search-top"><i class="fas fa-search"></i> بحث</button>
+    <button id="searchBtn" class="btn-search-top"><i class="fas fa-search"></i> بحث</button>
   </div>
 </div>
 
@@ -353,7 +353,7 @@
   <main class="main-content">
     <div class="results-header">
       <div>
-        <div class="results-count">عُثر على <strong>٢٤٧</strong> قاعة</div>
+        <div class="results-count">عُثر على <strong id="resultsCount">0</strong> قاعة</div>
       </div>
       <div style="display:flex;gap:1rem;align-items:center">
         <div class="view-toggle">
@@ -544,18 +544,81 @@
 </div>
 
 <script>
+const hallsGrid = document.getElementById('hallsGrid');
+const resultsCount = document.getElementById('resultsCount');
+const searchQuery = document.getElementById('searchQuery');
+const searchBtn = document.getElementById('searchBtn');
+const focusHallId = Number(new URLSearchParams(window.location.search).get('focus_hall_id') || 0);
+
 function setView(type, btn) {
   document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  const grid = document.getElementById('hallsGrid');
-  if(type === 'list') grid.classList.add('list-view');
-  else grid.classList.remove('list-view');
+  if(type === 'list') hallsGrid.classList.add('list-view');
+  else hallsGrid.classList.remove('list-view');
 }
+
 function toggleFav(btn) {
   const icon = btn.querySelector('i');
   if(icon.classList.contains('far')) { icon.classList.replace('far','fas'); btn.style.color='#e74c3c'; }
   else { icon.classList.replace('fas','far'); btn.style.color=''; }
 }
+
+function hallCardTemplate(hall) {
+  const focused = focusHallId === Number(hall.id);
+  return `
+    <div class="hall-card" style="${focused ? 'border:2px solid #C9A84C;' : ''}">
+      <div class="hall-img">
+        <div class="hall-img-ph">🏛️</div>
+        ${focused ? '<span class="hall-badge">قاعة محددة</span>' : ''}
+        <button class="hall-fav" onclick="toggleFav(this)"><i class="far fa-heart"></i></button>
+        <div class="hall-avail"><span class="avail-badge">✓ متاحة الآن</span></div>
+      </div>
+      <div class="hall-body">
+        <h3 class="hall-name">${hall.name}</h3>
+        <p class="hall-location"><i class="fas fa-map-marker-alt"></i> ${hall.location}</p>
+        <div class="hall-features">
+          <span class="feature"><i class="fas fa-users"></i> ${hall.capacity} ضيف</span>
+          <span class="feature"><i class="fas fa-user-tie"></i> ${hall.owner_name || 'مالك القاعة'}</span>
+        </div>
+        <div class="hall-footer">
+          <div class="hall-rating"><i class="fas fa-star"></i> ٥.٠ <span class="rating-count">(حديثة)</span></div>
+          <div class="hall-price"><div class="price">${Number(hall.price || 0).toLocaleString('ar-EG')} ج</div><div class="price-sub">يبدأ من / ليلة</div></div>
+        </div>
+        <a href="booking.html?hall_id=${hall.id}" class="btn-view">عرض وحجز</a>
+      </div>
+    </div>
+  `;
+}
+
+async function loadHalls() {
+  const response = await fetch('/api/halls');
+  const payload = await response.json();
+  if (!response.ok || !payload.success) {
+    hallsGrid.innerHTML = '<div class="hall-card" style="padding:1rem">تعذر تحميل القاعات</div>';
+    resultsCount.textContent = '0';
+    return;
+  }
+
+  const query = (searchQuery.value || '').trim().toLowerCase();
+  let halls = payload.data || [];
+  if (query) {
+    halls = halls.filter((h) => String(h.name).toLowerCase().includes(query) || String(h.location).toLowerCase().includes(query));
+  }
+  if (focusHallId) {
+    halls.sort((a, b) => (Number(b.id) === focusHallId) - (Number(a.id) === focusHallId));
+  }
+
+  resultsCount.textContent = String(halls.length);
+  if (!halls.length) {
+    hallsGrid.innerHTML = '<div class="hall-card" style="padding:1rem">لا توجد قاعات مطابقة.</div>';
+    return;
+  }
+  hallsGrid.innerHTML = halls.map(hallCardTemplate).join('');
+}
+
+searchBtn.addEventListener('click', loadHalls);
+searchQuery.addEventListener('keydown', (e) => { if (e.key === 'Enter') loadHalls(); });
+loadHalls();
 </script>
 </body>
 </html>

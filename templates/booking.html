@@ -378,7 +378,7 @@
           </div>
           <div class="form-group">
             <label>عدد الضيوف المتوقع</label>
-            <input type="number" placeholder="٣٠٠" value="300">
+            <input id="guestsInput" type="number" placeholder="٣٠٠" value="300">
           </div>
           <div class="form-group">
             <label>وقت البداية</label>
@@ -438,14 +438,14 @@
               </div>
             </div>
             <div class="summary-row"><span class="label">المدة</span><span class="val">١٢ ساعة (ليلة كاملة)</span></div>
-            <div class="summary-row"><span class="label">عدد الضيوف</span><span class="val">٣٠٠ ضيف</span></div>
+            <div class="summary-row"><span class="label">عدد الضيوف</span><span class="val" id="summaryGuestsValue">٣٠٠ ضيف</span></div>
           </div>
 
           <!-- Price -->
           <div class="summary-section">
             <div class="card-title" style="margin-bottom:0.8rem"><i class="fas fa-receipt"></i> تفاصيل السعر</div>
             <div class="price-breakdown">
-              <div class="price-row"><span class="label">إيجار القاعة</span><span class="val">٢٥،٠٠٠ ج</span></div>
+              <div class="price-row"><span class="label">إيجار القاعة</span><span class="val" id="summaryBasePrice">٢٥،٠٠٠ ج</span></div>
               <div class="price-row"><span class="label">كاتيرينج كامل</span><span class="val">٨،٠٠٠ ج</span></div>
               <div class="price-row"><span class="label">تصوير فيديو</span><span class="val">٣،٠٠٠ ج</span></div>
               <div class="price-row discount"><span class="label">خصم ١٠٪</span><span class="val">- ٣،٦٠٠ ج</span></div>
@@ -510,8 +510,20 @@
 <script>
   // Calendar
   const months = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
-  let currentMonth = 2; // March (0-indexed)
-  let currentYear = 2026;
+  const hallNameEl = document.querySelector('.hall-header-info h1');
+  const hallLocationEl = document.querySelector('.hall-meta .meta-item:nth-child(1)');
+  const hallCapacityEl = document.querySelector('.hall-meta .meta-item:nth-child(2)');
+  const hallPriceEl = document.querySelector('.hall-price-big .price');
+  const summaryHallEl = document.querySelector('.summary-hall');
+  const summaryLocEl = document.querySelector('.summary-loc');
+  const guestsInput = document.getElementById('guestsInput');
+  const summaryGuestsValue = document.getElementById('summaryGuestsValue');
+  let selectedHallId = null;
+  let selectedHallPrice = 25000;
+  let selectedHallName = 'قاعة كراون بالاس';
+  const initialNow = new Date();
+  let currentMonth = initialNow.getMonth();
+  let currentYear = initialNow.getFullYear();
   let selectedDay = null;
   const bookedDays = [5, 10, 15, 20, 25, 28];
 
@@ -533,6 +545,8 @@
       grid.appendChild(empty);
     }
 
+    let firstAvailableDay = null;
+    let firstAvailableEl = null;
     for(let d = 1; d <= daysInMonth; d++) {
       const dayEl = document.createElement('div');
       dayEl.className = 'cal-day';
@@ -547,8 +561,17 @@
         dayEl.addEventListener('click', () => selectDay(d, dayEl));
         if(isToday) dayEl.classList.add('today');
         if(selectedDay === d) dayEl.classList.add('selected');
+        if(firstAvailableDay === null) {
+          firstAvailableDay = d;
+          firstAvailableEl = dayEl;
+        }
       }
       grid.appendChild(dayEl);
+    }
+
+    // لتسهيل الاستخدام: لو المستخدم لم يختر يومًا يدويًا، نختار أول يوم متاح تلقائيًا.
+    if (selectedDay === null && firstAvailableDay !== null && firstAvailableEl) {
+      selectDay(firstAvailableDay, firstAvailableEl);
     }
   }
 
@@ -570,6 +593,33 @@
 
   renderCalendar();
 
+  function toMoney(value) {
+    return Number(value || 0).toLocaleString('ar-EG') + ' ج';
+  }
+
+  async function loadHallData() {
+    const hallId = Number(new URLSearchParams(window.location.search).get('hall_id') || 0);
+    if (!hallId) return;
+    const response = await fetch(`/api/halls/${hallId}`);
+    const payload = await response.json();
+    if (!response.ok || !payload.success) return;
+
+    const hall = payload.data;
+    selectedHallId = hall.id;
+    selectedHallPrice = Number(hall.price || 0);
+    selectedHallName = hall.name;
+
+    hallNameEl.textContent = hall.name;
+    hallLocationEl.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${hall.location}`;
+    hallCapacityEl.innerHTML = `<i class="fas fa-users"></i> حتى ${hall.capacity} ضيف`;
+    hallPriceEl.textContent = toMoney(hall.price);
+    summaryHallEl.textContent = `🏛️ ${hall.name}`;
+    summaryLocEl.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${hall.location}`;
+    document.getElementById('summaryBasePrice').textContent = toMoney(hall.price);
+  }
+
+  loadHallData();
+
   function toggleService(el) {
     el.classList.toggle('selected');
   }
@@ -579,15 +629,22 @@
     el.classList.add('selected');
   }
 
+  guestsInput.addEventListener('input', () => {
+    summaryGuestsValue.textContent = `${guestsInput.value || 0} ضيف`;
+  });
+
   function confirmBooking() {
   if(!selectedDay) { alert('من فضلك اختر تاريخ الحجز أولاً'); return; }
+  if(!selectedHallId) { alert('يرجى الدخول من صفحة القاعات عبر زر عرض وحجز.'); return; }
+  if(!guestsInput.value) { alert('من فضلك أدخل عدد الضيوف.'); return; }
   
   // داتا الحجز اللي هتتبعت للباك اند
   const bookingData = {
-      hall_name: "قاعة كراون بالاس",
-      date: selectedDay + " مارس 2026",
-      guests: 300,
-      price: 33300
+      hall_id: selectedHallId,
+      hall_name: selectedHallName,
+      date: `${currentYear}-${String(currentMonth + 1).padStart(2,'0')}-${String(selectedDay).padStart(2,'0')}`,
+      guests: Number(guestsInput.value),
+      price: selectedHallPrice
   };
 
   fetch('/api/book', {
@@ -595,12 +652,12 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(bookingData)
   })
-  .then(response => response.json())
+  .then(response => response.json().then((data) => ({ ok: response.ok, data })))
   .then(data => {
-      if(data.success) {
+      if(data.ok && data.data.success) {
           document.getElementById('successModal').classList.add('show');
       } else {
-          alert(data.message); // هيطلع "يجب تسجيل الدخول أولاً" لو مش عامل Login
+          alert((data.data && data.data.message) || 'فشل الحجز');
           window.location.href = "login.html";
       }
   });

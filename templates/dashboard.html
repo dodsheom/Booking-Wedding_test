@@ -205,6 +205,50 @@
     transition: all 0.2s;
   }
   .btn-add-hall:hover { background: var(--gold-light); }
+  .add-hall-form {
+    margin-bottom: 1.2rem;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--cream);
+    display: none;
+  }
+  .add-hall-form.show { display: block; }
+  .add-hall-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
+  }
+  .add-hall-grid input {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.55rem 0.7rem;
+    font-family: 'Cairo', sans-serif;
+    background: var(--white);
+    outline: none;
+  }
+  .add-hall-grid input:focus { border-color: var(--gold); }
+  .add-hall-actions {
+    margin-top: 0.8rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .btn-save-hall, .btn-cancel-hall {
+    border: none;
+    padding: 0.55rem 1rem;
+    border-radius: 8px;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .btn-save-hall { background: var(--dark); color: var(--gold); }
+  .btn-cancel-hall { background: #eee; color: var(--text); }
+  .add-hall-message {
+    margin-top: 0.5rem;
+    font-size: 0.82rem;
+    color: var(--text-light);
+  }
 
   /* REVENUE CHART placeholder */
   .chart-area { padding: 1.5rem; }
@@ -233,9 +277,9 @@
   </div>
 
   <div class="sidebar-user">
-    <div class="user-avatar">م</div>
+    <div id="sidebarAvatar" class="user-avatar">-</div>
     <div>
-      <div class="user-name">محمد العطار</div>
+      <div id="sidebarUserName" class="user-name">...</div>
       <div class="user-role">صاحب قاعة</div>
     </div>
   </div>
@@ -276,8 +320,8 @@
     <div class="topbar-right">
       <div class="notif-btn"><i class="fas fa-bell"></i><div class="notif-dot"></div></div>
       <div class="topbar-user">
-        <div class="topbar-avatar">م</div>
-        <span style="font-weight:600;font-size:0.88rem">محمد العطار</span>
+        <div id="topbarAvatar" class="topbar-avatar">-</div>
+        <span id="topbarUserName" style="font-weight:600;font-size:0.88rem">...</span>
         <i class="fas fa-chevron-down" style="font-size:0.7rem;color:var(--text-light)"></i>
       </div>
     </div>
@@ -292,31 +336,31 @@
         <div class="stat-card">
           <div class="stat-icon gold"><i class="fas fa-calendar-check" style="color:var(--gold)"></i></div>
           <div class="stat-info">
-            <div class="stat-num">٤٨</div>
+            <div id="monthBookingsStat" class="stat-num">0</div>
             <div class="stat-label">حجز هذا الشهر</div>
-            <div class="stat-change up"><i class="fas fa-arrow-up"></i> +١٢٪ عن الشهر الماضي</div>
+            <div class="stat-change up"><i class="fas fa-arrow-up"></i> محدث تلقائيًا</div>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon green"><i class="fas fa-money-bill-wave" style="color:var(--green)"></i></div>
           <div class="stat-info">
-            <div class="stat-num">١.٢م</div>
+            <div id="revenueStat" class="stat-num">0</div>
             <div class="stat-label">إجمالي الإيرادات (ج)</div>
-            <div class="stat-change up"><i class="fas fa-arrow-up"></i> +٨٪ نمو</div>
+            <div class="stat-change up"><i class="fas fa-arrow-up"></i> محدث تلقائيًا</div>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon blue"><i class="fas fa-star" style="color:var(--blue)"></i></div>
           <div class="stat-info">
-            <div class="stat-num">٤.٩</div>
-            <div class="stat-label">متوسط التقييم</div>
-            <div class="stat-change up"><i class="fas fa-arrow-up"></i> ٢٣٤ تقييم</div>
+            <div id="hallsTotalStat" class="stat-num">0</div>
+            <div class="stat-label">إجمالي القاعات</div>
+            <div class="stat-change up"><i class="fas fa-arrow-up"></i> قاعات صاحب الحساب</div>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon orange"><i class="fas fa-clock" style="color:var(--orange)"></i></div>
           <div class="stat-info">
-            <div class="stat-num">٣</div>
+            <div id="pendingBookingsStat" class="stat-num">0</div>
             <div class="stat-label">حجوزات معلقة</div>
             <div class="stat-change down"><i class="fas fa-exclamation-circle"></i> تحتاج موافقة</div>
           </div>
@@ -343,44 +387,7 @@
                 <th>إجراء</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td><div class="booking-id">#FRH-04892</div></td>
-                <td><div class="client-info"><div class="client-av">م</div><div><div class="client-name">محمد وسارة</div><div class="client-phone">01012345678</div></div></div></td>
-                <td>كراون بالاس</td>
-                <td>١٥ مارس ٢٠٢٦</td>
-                <td style="font-weight:700;color:var(--green)">٣٣،٣٠٠ ج</td>
-                <td><span class="status-badge confirmed">✓ مؤكد</span></td>
-                <td><div class="action-btns"><button class="action-btn" title="تفاصيل"><i class="fas fa-eye"></i></button><button class="action-btn" title="رسالة"><i class="fas fa-comment"></i></button></div></td>
-              </tr>
-              <tr>
-                <td><div class="booking-id">#FRH-04893</div></td>
-                <td><div class="client-info"><div class="client-av">ن</div><div><div class="client-name">نور وأحمد</div><div class="client-phone">01098765432</div></div></div></td>
-                <td>كراون بالاس</td>
-                <td>٢٢ مارس ٢٠٢٦</td>
-                <td style="font-weight:700;color:var(--orange)">٢٥،٠٠٠ ج</td>
-                <td><span class="status-badge pending">⏳ معلق</span></td>
-                <td><div class="action-btns"><button class="action-btn approve" title="قبول"><i class="fas fa-check"></i></button><button class="action-btn reject" title="رفض"><i class="fas fa-times"></i></button></div></td>
-              </tr>
-              <tr>
-                <td><div class="booking-id">#FRH-04894</div></td>
-                <td><div class="client-info"><div class="client-av">ه</div><div><div class="client-name">هاني رضوان</div><div class="client-phone">01155566778</div></div></div></td>
-                <td>فيلا الياسمين</td>
-                <td>٢٨ مارس ٢٠٢٦</td>
-                <td style="font-weight:700;color:var(--green)">١٨،٠٠٠ ج</td>
-                <td><span class="status-badge confirmed">✓ مؤكد</span></td>
-                <td><div class="action-btns"><button class="action-btn"><i class="fas fa-eye"></i></button><button class="action-btn"><i class="fas fa-comment"></i></button></div></td>
-              </tr>
-              <tr>
-                <td><div class="booking-id">#FRH-04891</div></td>
-                <td><div class="client-info"><div class="client-av">س</div><div><div class="client-name">سارة كمال</div><div class="client-phone">01222333444</div></div></div></td>
-                <td>كراون بالاس</td>
-                <td>٥ مارس ٢٠٢٦</td>
-                <td style="font-weight:700;color:var(--red)">٣٠،٠٠٠ ج</td>
-                <td><span class="status-badge cancelled">✗ ملغي</span></td>
-                <td><div class="action-btns"><button class="action-btn"><i class="fas fa-eye"></i></button></div></td>
-              </tr>
-            </tbody>
+            <tbody id="latestBookingsTableBody"></tbody>
           </table>
         </div>
 
@@ -433,41 +440,27 @@
       <!-- MY HALLS -->
       <div class="card">
         <div class="card-header">
-          <h3><i class="fas fa-building"></i> قاعاتي (٢)</h3>
-          <button class="btn-add-hall"><i class="fas fa-plus"></i> إضافة قاعة جديدة</button>
+          <h3><i class="fas fa-building"></i> قاعاتي (<span id="hallsCount">0</span>)</h3>
+          <button id="toggleAddHallBtn" class="btn-add-hall"><i class="fas fa-plus"></i> إضافة قاعة جديدة</button>
         </div>
         <div style="padding:1.5rem">
-          <div class="halls-grid">
-            <div class="hall-mgmt-card">
-              <div class="hall-img">🏛️<span class="hall-status-badge active">نشطة</span></div>
-              <div class="hall-mgmt-body">
-                <div class="hall-mgmt-name">قاعة كراون بالاس</div>
-                <div style="color:var(--text-light);font-size:0.8rem;margin-bottom:0.5rem">مدينة نصر، القاهرة</div>
-                <div class="hall-mgmt-stats">
-                  <div class="hmstat"><div class="hmstat-num">٣٢</div><div class="hmstat-label">حجز</div></div>
-                  <div class="hmstat"><div class="hmstat-num">٤.٩</div><div class="hmstat-label">تقييم</div></div>
-                  <div class="hmstat"><div class="hmstat-num">٨٥٪</div><div class="hmstat-label">إشغال</div></div>
-                </div>
-                <div class="hall-mgmt-actions">
-                  <button class="btn-edit"><i class="fas fa-edit"></i> تعديل</button>
-                  <button class="btn-manage"><i class="fas fa-cog"></i> إدارة</button>
-                </div>
-              </div>
+          <form id="addHallForm" class="add-hall-form">
+            <div class="add-hall-grid">
+              <input id="hallNameInput" type="text" placeholder="اسم القاعة" required>
+              <input id="hallLocationInput" type="text" placeholder="الموقع (مثال: المعادي)" required>
+              <input id="hallCapacityInput" type="number" min="1" placeholder="السعة (عدد الضيوف)" required>
+              <input id="hallPriceInput" type="number" min="1" placeholder="السعر (جنيه)" required>
             </div>
+            <div class="add-hall-actions">
+              <button id="saveHallBtn" type="submit" class="btn-save-hall">حفظ القاعة</button>
+              <button type="button" id="cancelAddHallBtn" class="btn-cancel-hall">إلغاء</button>
+            </div>
+            <div id="addHallMessage" class="add-hall-message"></div>
+          </form>
+          <div id="ownerHallsGrid" class="halls-grid">
             <div class="hall-mgmt-card">
-              <div class="hall-img">🌹<span class="hall-status-badge active">نشطة</span></div>
               <div class="hall-mgmt-body">
-                <div class="hall-mgmt-name">فيلا الياسمين</div>
-                <div style="color:var(--text-light);font-size:0.8rem;margin-bottom:0.5rem">الشيخ زايد، الجيزة</div>
-                <div class="hall-mgmt-stats">
-                  <div class="hmstat"><div class="hmstat-num">١٦</div><div class="hmstat-label">حجز</div></div>
-                  <div class="hmstat"><div class="hmstat-num">٤.٨</div><div class="hmstat-label">تقييم</div></div>
-                  <div class="hmstat"><div class="hmstat-num">٦٠٪</div><div class="hmstat-label">إشغال</div></div>
-                </div>
-                <div class="hall-mgmt-actions">
-                  <button class="btn-edit"><i class="fas fa-edit"></i> تعديل</button>
-                  <button class="btn-manage"><i class="fas fa-cog"></i> إدارة</button>
-                </div>
+                <div class="hall-mgmt-name">جاري تحميل القاعات...</div>
               </div>
             </div>
           </div>
@@ -497,7 +490,7 @@
     </div>
 
     <!-- OTHER SECTIONS placeholder -->
-    <div id="section-halls" style="display:none"><div class="card" style="padding:3rem;text-align:center"><div style="font-size:3rem;margin-bottom:1rem">🏛️</div><p style="color:var(--text-light)">إدارة القاعات — قريباً</p></div></div>
+    <div id="section-halls" style="display:none"><div class="card" style="padding:3rem;text-align:center"><div style="font-size:3rem;margin-bottom:1rem">🏛️</div><p style="color:var(--text-light)">إدارة القاعات متاحة من قسم "نظرة عامة" عبر زر "إضافة قاعة جديدة".</p></div></div>
     <div id="section-availability" style="display:none"><div class="card" style="padding:3rem;text-align:center"><div style="font-size:3rem;margin-bottom:1rem">📅</div><p style="color:var(--text-light)">إدارة التقويم والتواريخ — قريباً</p></div></div>
     <div id="section-services" style="display:none"><div class="card" style="padding:3rem;text-align:center"><div style="font-size:3rem;margin-bottom:1rem">🍽️</div><p style="color:var(--text-light)">إدارة الخدمات الإضافية — قريباً</p></div></div>
     <div id="section-revenue" style="display:none"><div class="card" style="padding:3rem;text-align:center"><div style="font-size:3rem;margin-bottom:1rem">💰</div><p style="color:var(--text-light)">تقارير الإيرادات — قريباً</p></div></div>
@@ -521,6 +514,222 @@
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     if(navEl) navEl.classList.add('active');
   }
+
+  const addHallForm = document.getElementById('addHallForm');
+  const addHallMessage = document.getElementById('addHallMessage');
+  const ownerHallsGrid = document.getElementById('ownerHallsGrid');
+  const hallsCount = document.getElementById('hallsCount');
+  const toggleAddHallBtn = document.getElementById('toggleAddHallBtn');
+  const cancelAddHallBtn = document.getElementById('cancelAddHallBtn');
+  const saveHallBtn = document.getElementById('saveHallBtn');
+  const sidebarUserName = document.getElementById('sidebarUserName');
+  const topbarUserName = document.getElementById('topbarUserName');
+  const sidebarAvatar = document.getElementById('sidebarAvatar');
+  const topbarAvatar = document.getElementById('topbarAvatar');
+  const monthBookingsStat = document.getElementById('monthBookingsStat');
+  const revenueStat = document.getElementById('revenueStat');
+  const hallsTotalStat = document.getElementById('hallsTotalStat');
+  const pendingBookingsStat = document.getElementById('pendingBookingsStat');
+  const latestBookingsTableBody = document.getElementById('latestBookingsTableBody');
+  let editingHallId = null;
+
+  function getInitial(name) {
+    if (!name) return '-';
+    return name.trim().charAt(0);
+  }
+
+  async function loadCurrentOwnerProfile() {
+    const response = await fetch('/api/me');
+    const payload = await response.json();
+    if (!response.ok || !payload.success) return;
+
+    const ownerName = payload.data.name || 'صاحب القاعة';
+    sidebarUserName.textContent = ownerName;
+    topbarUserName.textContent = ownerName;
+    sidebarAvatar.textContent = getInitial(ownerName);
+    topbarAvatar.textContent = getInitial(ownerName);
+  }
+
+  function hallCardTemplate(hall) {
+    return `
+      <div class="hall-mgmt-card">
+        <div class="hall-img">🏛️<span class="hall-status-badge ${hall.is_active ? 'active' : 'inactive'}">${hall.is_active ? 'نشطة' : 'غير نشطة'}</span></div>
+        <div class="hall-mgmt-body">
+          <div class="hall-mgmt-name">${hall.name}</div>
+          <div style="color:var(--text-light);font-size:0.8rem;margin-bottom:0.5rem">${hall.location}</div>
+          <div class="hall-mgmt-stats">
+            <div class="hmstat"><div class="hmstat-num">${hall.capacity}</div><div class="hmstat-label">السعة</div></div>
+            <div class="hmstat"><div class="hmstat-num">${Number(hall.price).toLocaleString('ar-EG')}</div><div class="hmstat-label">السعر</div></div>
+            <div class="hmstat"><div class="hmstat-num">—</div><div class="hmstat-label">حجوزات</div></div>
+          </div>
+          <div class="hall-mgmt-actions">
+            <button class="btn-edit" onclick="startEditHall(${hall.id}, '${String(hall.name).replace(/'/g, "\\'")}', '${String(hall.location).replace(/'/g, "\\'")}', ${hall.capacity}, ${hall.price})"><i class="fas fa-edit"></i> تعديل</button>
+            <button class="btn-manage" onclick="window.location.href='search.html?focus_hall_id=${hall.id}'"><i class="fas fa-eye"></i> عرض</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function startEditHall(id, name, location, capacity, price) {
+    editingHallId = id;
+    document.getElementById('hallNameInput').value = name;
+    document.getElementById('hallLocationInput').value = location;
+    document.getElementById('hallCapacityInput').value = capacity;
+    document.getElementById('hallPriceInput').value = price;
+    saveHallBtn.textContent = 'تحديث القاعة';
+    addHallMessage.textContent = 'وضع التعديل: عدّل البيانات ثم اضغط تحديث القاعة.';
+    addHallForm.classList.add('show');
+    window.scrollTo({ top: 420, behavior: 'smooth' });
+  }
+  window.startEditHall = startEditHall;
+
+  function resetHallFormState() {
+    editingHallId = null;
+    saveHallBtn.textContent = 'حفظ القاعة';
+  }
+
+  async function loadOwnerHalls() {
+    const response = await fetch('/api/owner/halls');
+    const payload = await response.json();
+    if (!payload.success) {
+      ownerHallsGrid.innerHTML = '<div class="hall-mgmt-card"><div class="hall-mgmt-body"><div class="hall-mgmt-name">تعذر تحميل القاعات</div></div></div>';
+      hallsCount.textContent = '0';
+      return;
+    }
+
+    const halls = payload.data || [];
+    hallsCount.textContent = String(halls.length);
+    hallsTotalStat.textContent = String(halls.length);
+    if (!halls.length) {
+      ownerHallsGrid.innerHTML = '<div class="hall-mgmt-card"><div class="hall-mgmt-body"><div class="hall-mgmt-name">لا توجد قاعات مضافة بعد</div></div></div>';
+      addHallForm.classList.add('show');
+      addHallMessage.textContent = 'أول مرة دخول؟ أضف قاعتك الآن.';
+      return;
+    }
+    addHallMessage.textContent = '';
+    ownerHallsGrid.innerHTML = halls.map(hallCardTemplate).join('');
+  }
+
+  function bookingStatusBadge(status) {
+    if (status === 'confirmed') return '<span class="status-badge confirmed">✓ مؤكد</span>';
+    if (status === 'cancelled') return '<span class="status-badge cancelled">✗ ملغي</span>';
+    return '<span class="status-badge pending">⏳ معلق</span>';
+  }
+
+  function bookingRowTemplate(booking) {
+    const amount = Number(booking.total_price || 0).toLocaleString('ar-EG');
+    const name = booking.customer_name || 'عميل';
+    const hallName = booking.hall_name || '—';
+    const initial = name.trim().charAt(0) || '-';
+    return `
+      <tr>
+        <td><div class="booking-id">#FRH-${String(booking.id).padStart(5, '0')}</div></td>
+        <td><div class="client-info"><div class="client-av">${initial}</div><div><div class="client-name">${name}</div><div class="client-phone">${booking.guests} ضيف</div></div></div></td>
+        <td>${hallName}</td>
+        <td>${booking.booking_date}</td>
+        <td style="font-weight:700;color:var(--green)">${amount} ج</td>
+        <td>${bookingStatusBadge(booking.status)}</td>
+        <td><div class="action-btns"><button class="action-btn"><i class="fas fa-eye"></i></button></div></td>
+      </tr>
+    `;
+  }
+
+  function isCurrentMonth(bookingDate) {
+    const now = new Date();
+    const date = new Date(bookingDate);
+    if (Number.isNaN(date.getTime())) {
+      // دعم التواريخ النصية العربية مثل "20 مارس 2026".
+      const arabicMonths = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+      const currentMonthName = arabicMonths[now.getMonth()];
+      const currentYear = String(now.getFullYear());
+      return String(bookingDate || '').includes(currentMonthName) && String(bookingDate || '').includes(currentYear);
+    }
+    return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+  }
+
+  async function loadOwnerBookingsDashboard() {
+    const response = await fetch('/api/owner/bookings');
+    const payload = await response.json();
+    if (!response.ok || !payload.success) {
+      latestBookingsTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:1rem">تعذر تحميل الحجوزات</td></tr>';
+      monthBookingsStat.textContent = '0';
+      revenueStat.textContent = '0';
+      pendingBookingsStat.textContent = '0';
+      return;
+    }
+
+    const bookings = payload.data || [];
+    const pendingCount = bookings.filter(b => b.status === 'pending').length;
+    const monthCount = bookings.filter(b => isCurrentMonth(b.booking_date)).length;
+    const totalRevenue = bookings
+      .filter(b => b.status !== 'cancelled')
+      .reduce((sum, b) => sum + Number(b.total_price || 0), 0);
+
+    monthBookingsStat.textContent = String(monthCount);
+    revenueStat.textContent = Number(totalRevenue).toLocaleString('ar-EG');
+    pendingBookingsStat.textContent = String(pendingCount);
+
+    const latest = bookings.slice(0, 8);
+    if (!latest.length) {
+      latestBookingsTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:1rem">لا توجد حجوزات بعد</td></tr>';
+      return;
+    }
+    latestBookingsTableBody.innerHTML = latest.map(bookingRowTemplate).join('');
+  }
+
+  toggleAddHallBtn.addEventListener('click', () => {
+    addHallForm.classList.toggle('show');
+    addHallMessage.textContent = '';
+  });
+
+  cancelAddHallBtn.addEventListener('click', () => {
+    addHallForm.classList.remove('show');
+    addHallForm.reset();
+    addHallMessage.textContent = '';
+    resetHallFormState();
+  });
+
+  addHallForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    addHallMessage.textContent = 'جاري حفظ القاعة...';
+
+    const payload = {
+      name: document.getElementById('hallNameInput').value.trim(),
+      location: document.getElementById('hallLocationInput').value.trim(),
+      capacity: Number(document.getElementById('hallCapacityInput').value || 0),
+      price: Number(document.getElementById('hallPriceInput').value || 0),
+    };
+
+    if (!payload.name || !payload.location || payload.capacity <= 0 || payload.price <= 0) {
+      addHallMessage.textContent = 'من فضلك أدخل كل البيانات بشكل صحيح.';
+      return;
+    }
+
+    const isEdit = Boolean(editingHallId);
+    const url = isEdit ? `/api/owner/halls/${editingHallId}` : '/api/halls';
+    const response = await fetch(url, {
+      method: isEdit ? 'PATCH' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const result = await response.json().catch(() => ({}));
+
+    if (!response.ok || !result.success) {
+      addHallMessage.textContent = result.message || `تعذر حفظ القاعة (كود ${response.status}).`;
+      return;
+    }
+
+    addHallMessage.textContent = isEdit ? 'تم تحديث القاعة بنجاح.' : 'تمت إضافة القاعة بنجاح.';
+    addHallForm.reset();
+    resetHallFormState();
+    await loadOwnerHalls();
+    await loadOwnerBookingsDashboard();
+  });
+
+  loadCurrentOwnerProfile();
+  loadOwnerHalls();
+  loadOwnerBookingsDashboard();
 </script>
 </body>
 </html>
