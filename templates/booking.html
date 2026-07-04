@@ -1,667 +1,1461 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>حجز القاعة - فرحتك</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<style>
-  :root {
-    --gold: #C9A84C; --gold-light: #E8C97A; --gold-pale: #F5EDD5;
-    --dark: #1A1208; --dark-2: #2C1E08; --cream: #FAF6EE;
-    --text: #3D2B0A; --text-light: #7A6040; --white: #FFFFFF;
-    --border: rgba(201,168,76,0.15);
-    --green: #27ae60; --red: #e74c3c;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Cairo', sans-serif; background: var(--cream); color: var(--text); }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حجز القاعة - فرحتك</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Cairo:wght@300;400;600;700;900&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --gold: #C9A84C;
+            --gold-light: #E8C97A;
+            --gold-pale: #F5EDD5;
+            --dark: #1A1208;
+            --dark-2: #2C1E08;
+            --cream: #FAF6EE;
+            --text: #3D2B0A;
+            --text-light: #7A6040;
+            --white: #FFFFFF;
+            --border: rgba(201, 168, 76, 0.15);
+            --green: #27ae60;
+            --red: #e74c3c;
+        }
 
-  nav {
-    background: var(--dark); padding: 0 5%;
-    display: flex; align-items: center; justify-content: space-between; height: 70px;
-    border-bottom: 1px solid rgba(201,168,76,0.2);
-    position: sticky; top: 0; z-index: 100;
-  }
-  .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: var(--gold); text-decoration: none; }
-  .nav-back { color: rgba(255,255,255,0.7); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
-  .nav-back:hover { color: var(--gold); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  /* BREADCRUMB */
-  .breadcrumb { background: var(--white); padding: 1rem 5%; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-light); }
-  .breadcrumb a { color: var(--gold); text-decoration: none; }
-  .bc-sep { color: var(--border); }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--cream);
+            color: var(--text);
+        }
 
-  .page-container { max-width: 1200px; margin: 0 auto; padding: 2rem 5%; }
+        nav {
+            background: var(--dark);
+            padding: 0 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+            border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-  /* HALL HEADER */
-  .hall-header {
-    display: grid; grid-template-columns: 1fr auto;
-    gap: 2rem; align-items: start; margin-bottom: 2rem;
-  }
-  .hall-header-info h1 { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 900; color: var(--dark); margin-bottom: 0.5rem; }
-  .hall-meta { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
-  .meta-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; color: var(--text-light); }
-  .meta-item i { color: var(--gold); }
-  .hall-rating-big { display: flex; align-items: center; gap: 0.4rem; background: var(--gold-pale); padding: 0.4rem 1rem; border-radius: 20px; }
-  .rating-num { font-weight: 900; font-size: 1.1rem; color: var(--dark); }
-  .rating-stars { color: var(--gold); }
-  .rating-cnt { color: var(--text-light); font-size: 0.82rem; }
-  .hall-price-big { text-align: left; }
-  .hall-price-big .price { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; color: var(--dark); }
-  .hall-price-big .price-sub { color: var(--text-light); font-size: 0.85rem; }
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--gold);
+            text-decoration: none;
+        }
 
-  /* GALLERY */
-  .gallery { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 1rem; height: 380px; margin-bottom: 2rem; border-radius: 20px; overflow: hidden; }
-  .gallery-main { grid-row: span 2; }
-  .gallery-item {
-    background: linear-gradient(135deg, var(--dark-2), var(--dark));
-    display: flex; align-items: center; justify-content: center;
-    font-size: 3rem; opacity: 0.6; cursor: pointer;
-    transition: opacity 0.3s; position: relative;
-  }
-  .gallery-item:hover { opacity: 0.9; }
-  .gallery-main { font-size: 6rem; }
-  .gallery-more {
-    position: absolute; inset: 0; background: rgba(0,0,0,0.5);
-    display: flex; align-items: center; justify-content: center;
-    color: white; font-size: 1.2rem; font-weight: 700;
-  }
+        .nav-back {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
 
-  /* MAIN LAYOUT */
-  .booking-layout { display: grid; grid-template-columns: 1fr 400px; gap: 2rem; align-items: start; }
+        .nav-back:hover {
+            color: var(--gold);
+        }
 
-  /* LEFT PANEL */
-  .left-panel { display: flex; flex-direction: column; gap: 1.5rem; }
-  .card {
-    background: var(--white); border-radius: 16px;
-    border: 1px solid var(--border);
-    padding: 1.5rem;
-    box-shadow: 0 2px 12px rgba(44,30,8,0.05);
-  }
-  .card-title { font-size: 1.1rem; font-weight: 700; color: var(--dark); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.5rem; }
-  .card-title i { color: var(--gold); }
+        /* BREADCRUMB */
+        .breadcrumb {
+            background: var(--white);
+            padding: 1rem 5%;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
 
-  /* CALENDAR */
-  .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-  .cal-month { font-weight: 700; font-size: 1rem; color: var(--dark); }
-  .cal-nav { display: flex; gap: 0.5rem; }
-  .cal-nav button { width: 32px; height: 32px; border: 1px solid var(--border); background: var(--cream); border-radius: 8px; cursor: pointer; color: var(--text); }
-  .cal-nav button:hover { background: var(--gold); color: var(--dark); border-color: var(--gold); }
-  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
-  .cal-day-name { text-align: center; font-size: 0.75rem; font-weight: 700; color: var(--text-light); padding: 0.3rem; }
-  .cal-day {
-    text-align: center; padding: 0.5rem 0.2rem; border-radius: 8px;
-    cursor: pointer; font-size: 0.88rem; transition: all 0.2s;
-    position: relative;
-  }
-  .cal-day:hover:not(.booked):not(.past) { background: var(--gold-pale); color: var(--dark); }
-  .cal-day.today { font-weight: 700; color: var(--gold); }
-  .cal-day.selected { background: var(--gold) !important; color: var(--dark) !important; font-weight: 700; }
-  .cal-day.booked { background: rgba(231,76,60,0.1); color: var(--red); cursor: not-allowed; text-decoration: line-through; font-size: 0.78rem; }
-  .cal-day.past { color: #ccc; cursor: not-allowed; }
-  .cal-day.empty { cursor: default; }
-  .cal-legend { display: flex; gap: 1.5rem; margin-top: 1rem; font-size: 0.8rem; }
-  .legend-item { display: flex; align-items: center; gap: 0.4rem; color: var(--text-light); }
-  .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
-  .legend-dot.available { background: var(--gold); }
-  .legend-dot.booked { background: var(--red); opacity: 0.5; }
-  .legend-dot.today { border: 2px solid var(--gold); background: transparent; }
+        .breadcrumb a {
+            color: var(--gold);
+            text-decoration: none;
+        }
 
-  /* SERVICES */
-  .services-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 0.8rem; }
-  .service-item {
-    border: 2px solid var(--border); border-radius: 12px; padding: 1rem;
-    cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.8rem;
-  }
-  .service-item:hover { border-color: var(--gold); background: var(--gold-pale); }
-  .service-item.selected { border-color: var(--gold); background: var(--gold-pale); }
-  .service-icon { font-size: 1.5rem; }
-  .service-info { flex: 1; }
-  .service-name { font-weight: 700; font-size: 0.88rem; color: var(--dark); }
-  .service-price { color: var(--gold); font-size: 0.82rem; font-weight: 600; }
-  .service-check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .service-item.selected .service-check { background: var(--gold); border-color: var(--gold); color: var(--dark); font-size: 0.7rem; font-weight: 900; }
-  .service-item.selected .service-check::after { content: '✓'; }
+        .bc-sep {
+            color: var(--border);
+        }
 
-  /* DETAILS FORM */
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
-  .form-group.full { grid-column: span 2; }
-  .form-group label { font-size: 0.82rem; font-weight: 700; color: var(--text-light); }
-  .form-group input, .form-group select, .form-group textarea {
-    border: 1px solid var(--border); background: var(--cream);
-    padding: 0.7rem 1rem; border-radius: 10px;
-    font-family: 'Cairo', sans-serif; font-size: 0.9rem; color: var(--text);
-    outline: none; transition: border-color 0.2s;
-  }
-  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); background: var(--white); }
-  .form-group textarea { resize: vertical; min-height: 80px; }
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 5%;
+        }
 
-  /* RIGHT PANEL - SUMMARY */
-  .summary-card {
-    background: var(--white); border-radius: 16px;
-    border: 1px solid var(--border); overflow: hidden;
-    box-shadow: 0 4px 20px rgba(44,30,8,0.08);
-    position: sticky; top: 90px;
-  }
-  .summary-header {
-    background: linear-gradient(135deg, var(--dark), var(--dark-2));
-    padding: 1.5rem; color: white;
-  }
-  .summary-hall { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.3rem; }
-  .summary-loc { color: rgba(255,255,255,0.6); font-size: 0.85rem; display: flex; align-items: center; gap: 0.3rem; }
-  .summary-body { padding: 1.5rem; }
-  .summary-section { margin-bottom: 1.2rem; padding-bottom: 1.2rem; border-bottom: 1px solid var(--border); }
-  .summary-section:last-of-type { border-bottom: none; margin-bottom: 0; }
-  .summary-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-size: 0.9rem; }
-  .summary-row .label { color: var(--text-light); }
-  .summary-row .val { font-weight: 600; color: var(--dark); }
-  .summary-date {
-    background: var(--gold-pale); border: 1px solid rgba(201,168,76,0.3);
-    border-radius: 10px; padding: 0.8rem 1rem;
-    display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem;
-  }
-  .summary-date i { color: var(--gold); font-size: 1.2rem; }
-  .summary-date .date-text { font-weight: 700; color: var(--dark); font-size: 0.9rem; }
-  .summary-date .date-sub { color: var(--text-light); font-size: 0.78rem; }
-  .price-breakdown { display: flex; flex-direction: column; gap: 0.6rem; }
-  .price-row { display: flex; justify-content: space-between; font-size: 0.88rem; }
-  .price-row .label { color: var(--text-light); }
-  .price-row .val { color: var(--text); font-weight: 600; }
-  .price-row.discount .val { color: var(--green); }
-  .price-divider { border: none; border-top: 1px dashed var(--border); margin: 0.5rem 0; }
-  .price-total { display: flex; justify-content: space-between; padding-top: 0.5rem; }
-  .price-total .label { font-weight: 700; font-size: 1rem; color: var(--dark); }
-  .price-total .val { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; color: var(--dark); }
+        /* HALL HEADER */
+        .hall-header {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 2rem;
+            align-items: start;
+            margin-bottom: 2rem;
+        }
 
-  /* PAYMENT METHODS */
-  .payment-methods { margin: 1rem 0; display: flex; flex-direction: column; gap: 0.6rem; }
-  .payment-opt {
-    border: 2px solid var(--border); border-radius: 10px; padding: 0.8rem 1rem;
-    display: flex; align-items: center; gap: 0.8rem; cursor: pointer;
-    transition: all 0.2s;
-  }
-  .payment-opt:hover { border-color: var(--gold); }
-  .payment-opt.selected { border-color: var(--gold); background: var(--gold-pale); }
-  .payment-opt input[type="radio"] { display: none; }
-  .payment-radio { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; }
-  .payment-opt.selected .payment-radio { background: var(--gold); border-color: var(--gold); }
-  .payment-icon { font-size: 1.3rem; }
-  .payment-name { font-weight: 600; font-size: 0.88rem; color: var(--dark); }
-  .payment-sub { color: var(--text-light); font-size: 0.78rem; }
+        .hall-header-info h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
 
-  .btn-book-now {
-    width: 100%; background: var(--gold); color: var(--dark);
-    border: none; padding: 1rem; border-radius: 12px;
-    font-family: 'Cairo', sans-serif; font-weight: 900; font-size: 1.05rem;
-    cursor: pointer; transition: all 0.3s; margin-top: 1rem;
-    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-  }
-  .btn-book-now:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(201,168,76,0.4); }
+        .hall-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
 
-  .secure-note { text-align: center; margin-top: 1rem; font-size: 0.78rem; color: var(--text-light); display: flex; align-items: center; justify-content: center; gap: 0.3rem; }
-  .secure-note i { color: var(--green); }
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
 
-  /* REVIEWS */
-  .reviews-list { display: flex; flex-direction: column; gap: 1rem; }
-  .review { padding: 1rem; background: var(--cream); border-radius: 12px; }
-  .review-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem; }
-  .reviewer { display: flex; align-items: center; gap: 0.7rem; }
-  .reviewer-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--dark); font-size: 1rem; }
-  .reviewer-name { font-weight: 700; font-size: 0.9rem; color: var(--dark); }
-  .review-date { color: var(--text-light); font-size: 0.78rem; }
-  .review-stars { color: var(--gold); font-size: 0.85rem; }
-  .review-text { color: var(--text); font-size: 0.88rem; line-height: 1.7; }
+        .meta-item i {
+            color: var(--gold);
+        }
 
-  /* SUCCESS MODAL */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
-  .modal-overlay.show { display: flex; }
-  .modal {
-    background: var(--white); border-radius: 20px; padding: 3rem; max-width: 500px; width: 90%;
-    text-align: center; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
-  @keyframes popIn { from{transform:scale(0.8);opacity:0} to{transform:scale(1);opacity:1} }
-  .modal-icon { font-size: 4rem; margin-bottom: 1rem; }
-  .modal h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--dark); margin-bottom: 0.5rem; }
-  .modal p { color: var(--text-light); line-height: 1.7; margin-bottom: 2rem; }
-  .modal-ref { background: var(--gold-pale); border: 1px dashed var(--gold); padding: 1rem; border-radius: 10px; margin-bottom: 2rem; }
-  .modal-ref .ref-num { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; color: var(--dark); }
-  .modal-ref .ref-label { color: var(--text-light); font-size: 0.8rem; }
-  .btn-modal { background: var(--dark); color: var(--gold); padding: 0.8rem 2rem; border-radius: 10px; border: none; font-family: 'Cairo', sans-serif; font-weight: 700; cursor: pointer; font-size: 0.95rem; }
+        .hall-rating-big {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--gold-pale);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+        }
 
-  @media (max-width: 900px) {
-    .booking-layout { grid-template-columns: 1fr; }
-    .summary-card { position: static; }
-    .gallery { grid-template-columns: 1fr 1fr; height: 250px; }
-    .gallery-main { grid-row: auto; }
-  }
-</style>
+        .rating-num {
+            font-weight: 900;
+            font-size: 1.1rem;
+            color: var(--dark);
+        }
+
+        .rating-stars {
+            color: var(--gold);
+        }
+
+        .rating-cnt {
+            color: var(--text-light);
+            font-size: 0.82rem;
+        }
+
+        .hall-price-big {
+            text-align: left;
+        }
+
+        .hall-price-big .price {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--dark);
+        }
+
+        .hall-price-big .price-sub {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        /* GALLERY */
+        .gallery {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 1rem;
+            height: 380px;
+            margin-bottom: 2rem;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .gallery-main {
+            grid-row: span 2;
+        }
+
+        .gallery-item {
+            background: linear-gradient(135deg, var(--dark-2), var(--dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            opacity: 0.6;
+            cursor: pointer;
+            transition: opacity 0.3s;
+            position: relative;
+        }
+
+        .gallery-item:hover {
+            opacity: 0.9;
+        }
+
+        .gallery-main {
+            font-size: 6rem;
+        }
+
+        .gallery-more {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        /* MAIN LAYOUT */
+        .booking-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        /* LEFT PANEL */
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            box-shadow: 0 2px 12px rgba(44, 30, 8, 0.05);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title i {
+            color: var(--gold);
+        }
+
+        /* CALENDAR */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .cal-month {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--dark);
+        }
+
+        .cal-nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .cal-nav button {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border);
+            background: var(--cream);
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        .cal-nav button:hover {
+            background: var(--gold);
+            color: var(--dark);
+            border-color: var(--gold);
+        }
+
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .cal-day-name {
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-light);
+            padding: 0.3rem;
+        }
+
+        .cal-day {
+            text-align: center;
+            padding: 0.5rem 0.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .cal-day:hover:not(.booked):not(.past) {
+            background: var(--gold-pale);
+            color: var(--dark);
+        }
+
+        .cal-day.today {
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .cal-day.selected {
+            background: var(--gold) !important;
+            color: var(--dark) !important;
+            font-weight: 700;
+        }
+
+        .cal-day.booked {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--red);
+            cursor: not-allowed;
+            text-decoration: line-through;
+            font-size: 0.78rem;
+        }
+
+        .cal-day.past {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .cal-day.empty {
+            cursor: default;
+        }
+
+        .cal-legend {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--text-light);
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.available {
+            background: var(--gold);
+        }
+
+        .legend-dot.booked {
+            background: var(--red);
+            opacity: 0.5;
+        }
+
+        .legend-dot.today {
+            border: 2px solid var(--gold);
+            background: transparent;
+        }
+
+        /* SERVICES */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+        }
+
+        .service-item {
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .service-item:hover {
+            border-color: var(--gold);
+            background: var(--gold-pale);
+        }
+
+        .service-item.selected {
+            border-color: var(--gold);
+            background: var(--gold-pale);
+        }
+
+        .service-icon {
+            font-size: 1.5rem;
+        }
+
+        .service-info {
+            flex: 1;
+        }
+
+        .service-name {
+            font-weight: 700;
+            font-size: 0.88rem;
+            color: var(--dark);
+        }
+
+        .service-price {
+            color: var(--gold);
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .service-check {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .service-item.selected .service-check {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--dark);
+            font-size: 0.7rem;
+            font-weight: 900;
+        }
+
+        .service-item.selected .service-check::after {
+            content: '✓';
+        }
+
+        /* DETAILS FORM */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .form-group.full {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            border: 1px solid var(--border);
+            background: var(--cream);
+            padding: 0.7rem 1rem;
+            border-radius: 10px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--gold);
+            background: var(--white);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* RIGHT PANEL - SUMMARY */
+        .summary-card {
+            background: var(--white);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(44, 30, 8, 0.08);
+            position: sticky;
+            top: 90px;
+        }
+
+        .summary-header {
+            background: linear-gradient(135deg, var(--dark), var(--dark-2));
+            padding: 1.5rem;
+            color: white;
+        }
+
+        .summary-hall {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .summary-loc {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .summary-body {
+            padding: 1.5rem;
+        }
+
+        .summary-section {
+            margin-bottom: 1.2rem;
+            padding-bottom: 1.2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-section:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .summary-row .label {
+            color: var(--text-light);
+        }
+
+        .summary-row .val {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .summary-date {
+            background: var(--gold-pale);
+            border: 1px solid rgba(201, 168, 76, 0.3);
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .summary-date i {
+            color: var(--gold);
+            font-size: 1.2rem;
+        }
+
+        .summary-date .date-text {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .summary-date .date-sub {
+            color: var(--text-light);
+            font-size: 0.78rem;
+        }
+
+        .price-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.88rem;
+        }
+
+        .price-row .label {
+            color: var(--text-light);
+        }
+
+        .price-row .val {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .price-row.discount .val {
+            color: var(--green);
+        }
+
+        .price-divider {
+            border: none;
+            border-top: 1px dashed var(--border);
+            margin: 0.5rem 0;
+        }
+
+        .price-total {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 0.5rem;
+        }
+
+        .price-total .label {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--dark);
+        }
+
+        .price-total .val {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--dark);
+        }
+
+        /* PAYMENT METHODS */
+        .payment-methods {
+            margin: 1rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .payment-opt {
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .payment-opt:hover {
+            border-color: var(--gold);
+        }
+
+        .payment-opt.selected {
+            border-color: var(--gold);
+            background: var(--gold-pale);
+        }
+
+        .payment-opt input[type="radio"] {
+            display: none;
+        }
+
+        .payment-radio {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .payment-opt.selected .payment-radio {
+            background: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .payment-icon {
+            font-size: 1.3rem;
+        }
+
+        .payment-name {
+            font-weight: 600;
+            font-size: 0.88rem;
+            color: var(--dark);
+        }
+
+        .payment-sub {
+            color: var(--text-light);
+            font-size: 0.78rem;
+        }
+
+        .btn-book-now {
+            width: 100%;
+            background: var(--gold);
+            color: var(--dark);
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 900;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-book-now:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(201, 168, 76, 0.4);
+        }
+
+        .secure-note {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.78rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+        }
+
+        .secure-note i {
+            color: var(--green);
+        }
+
+        /* REVIEWS */
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .review {
+            padding: 1rem;
+            background: var(--cream);
+            border-radius: 12px;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.5rem;
+        }
+
+        .reviewer {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .reviewer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 1rem;
+        }
+
+        .reviewer-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+
+        .review-date {
+            color: var(--text-light);
+            font-size: 0.78rem;
+        }
+
+        .review-stars {
+            color: var(--gold);
+            font-size: 0.85rem;
+        }
+
+        .review-text {
+            color: var(--text);
+            font-size: 0.88rem;
+            line-height: 1.7;
+        }
+
+        /* SUCCESS MODAL */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0
+            }
+            to {
+                transform: scale(1);
+                opacity: 1
+            }
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal p {
+            color: var(--text-light);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .modal-ref {
+            background: var(--gold-pale);
+            border: 1px dashed var(--gold);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .modal-ref .ref-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--dark);
+        }
+
+        .modal-ref .ref-label {
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+
+        .btn-modal {
+            background: var(--dark);
+            color: var(--gold);
+            padding: 0.8rem 2rem;
+            border-radius: 10px;
+            border: none;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 900px) {
+            .booking-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-card {
+                position: static;
+            }
+
+            .gallery {
+                grid-template-columns: 1fr 1fr;
+                height: 250px;
+            }
+
+            .gallery-main {
+                grid-row: auto;
+            }
+        }
+    </style>
 </head>
 <body>
 
 <nav>
-  <a href="index.html" class="logo">فرحتك</a>
-  <a href="search.html" class="nav-back"><i class="fas fa-chevron-right"></i> العودة للبحث</a>
+    <a href="index.html" class="logo">فرحتك</a>
+    <a href="search.html" class="nav-back"><i class="fas fa-chevron-right"></i> العودة للبحث</a>
 </nav>
 
 <div class="breadcrumb">
-  <a href="index.html">الرئيسية</a> <span class="bc-sep">/</span>
-  <a href="search.html">القاعات</a> <span class="bc-sep">/</span>
-  قاعة كراون بالاس
+    <a href="index.html">الرئيسية</a> <span class="bc-sep">/</span>
+    <a href="search.html">القاعات</a> <span class="bc-sep">/</span>
+    قاعة كراون بالاس
 </div>
 
 <div class="page-container">
-  <!-- HALL HEADER -->
-  <div class="hall-header">
-    <div class="hall-header-info">
-      <h1>قاعة كراون بالاس</h1>
-      <div class="hall-meta">
-        <div class="meta-item"><i class="fas fa-map-marker-alt"></i> مدينة نصر، القاهرة</div>
-        <div class="meta-item"><i class="fas fa-users"></i> حتى ١٠٠٠ ضيف</div>
-        <div class="meta-item"><i class="fas fa-parking"></i> موقف سيارات</div>
-        <div class="hall-rating-big">
-          <span class="rating-stars">★★★★★</span>
-          <span class="rating-num">٤.٩</span>
-          <span class="rating-cnt">(٢٣٤ تقييم)</span>
-        </div>
-      </div>
-    </div>
-    <div class="hall-price-big">
-      <div class="price">٢٥،٠٠٠ ج</div>
-      <div class="price-sub">يبدأ من / ليلة</div>
-    </div>
-  </div>
-
-  <!-- GALLERY -->
-  <div class="gallery">
-    <div class="gallery-item gallery-main">🏛️</div>
-    <div class="gallery-item">✨</div>
-    <div class="gallery-item">🌹</div>
-    <div class="gallery-item">🎊</div>
-    <div class="gallery-item" style="position:relative">
-      🌸
-      <div class="gallery-more">+١٢ صورة</div>
-    </div>
-  </div>
-
-  <!-- BOOKING LAYOUT -->
-  <div class="booking-layout">
-    <!-- LEFT: Details -->
-    <div class="left-panel">
-
-      <!-- CALENDAR -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-calendar-alt"></i> اختر تاريخ الحفل</div>
-        <div class="calendar-header">
-          <button class="cal-nav" onclick="changeMonth(-1)" style="background:none;border:none;cursor:pointer;color:var(--gold);font-size:1.1rem"><i class="fas fa-chevron-right"></i></button>
-          <span class="cal-month" id="calMonth">مارس ٢٠٢٦</span>
-          <button class="cal-nav" onclick="changeMonth(1)" style="background:none;border:none;cursor:pointer;color:var(--gold);font-size:1.1rem"><i class="fas fa-chevron-left"></i></button>
-        </div>
-        <div class="cal-grid" id="calGrid">
-          <div class="cal-day-name">أح</div>
-          <div class="cal-day-name">إث</div>
-          <div class="cal-day-name">ثل</div>
-          <div class="cal-day-name">أر</div>
-          <div class="cal-day-name">خم</div>
-          <div class="cal-day-name">جم</div>
-          <div class="cal-day-name">سب</div>
-        </div>
-        <div class="cal-legend">
-          <div class="legend-item"><div class="legend-dot available"></div> متاح</div>
-          <div class="legend-item"><div class="legend-dot booked"></div> محجوز</div>
-          <div class="legend-item"><div class="legend-dot today"></div> اليوم</div>
-        </div>
-      </div>
-
-      <!-- SERVICES -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-concierge-bell"></i> اختر الخدمات الإضافية</div>
-        <div class="services-grid">
-          <div class="service-item selected" onclick="toggleService(this)">
-            <div class="service-icon">🍽️</div>
-            <div class="service-info"><div class="service-name">كاتيرينج كامل</div><div class="service-price">+٨،٠٠٠ ج</div></div>
-            <div class="service-check"></div>
-          </div>
-          <div class="service-item" onclick="toggleService(this)">
-            <div class="service-icon">🌸</div>
-            <div class="service-info"><div class="service-name">ديكور وزهور</div><div class="service-price">+٥،٠٠٠ ج</div></div>
-            <div class="service-check"></div>
-          </div>
-          <div class="service-item selected" onclick="toggleService(this)">
-            <div class="service-icon">📸</div>
-            <div class="service-info"><div class="service-name">تصوير فيديو</div><div class="service-price">+٣،٠٠٠ ج</div></div>
-            <div class="service-check"></div>
-          </div>
-          <div class="service-item" onclick="toggleService(this)">
-            <div class="service-icon">🎵</div>
-            <div class="service-info"><div class="service-name">موسيقى ودي جي</div><div class="service-price">+٢،٥٠٠ ج</div></div>
-            <div class="service-check"></div>
-          </div>
-          <div class="service-item" onclick="toggleService(this)">
-            <div class="service-icon">💡</div>
-            <div class="service-info"><div class="service-name">إضاءة خاصة</div><div class="service-price">+١،٥٠٠ ج</div></div>
-            <div class="service-check"></div>
-          </div>
-          <div class="service-item" onclick="toggleService(this)">
-            <div class="service-icon">🚌</div>
-            <div class="service-info"><div class="service-name">نقل ضيوف</div><div class="service-price">+٤،٠٠٠ ج</div></div>
-            <div class="service-check"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- DETAILS FORM -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-user-edit"></i> بيانات الحجز</div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>الاسم الكامل</label>
-            <input type="text" placeholder="محمد أحمد">
-          </div>
-          <div class="form-group">
-            <label>رقم الهاتف</label>
-            <input type="tel" placeholder="01xxxxxxxxx">
-          </div>
-          <div class="form-group">
-            <label>البريد الإلكتروني</label>
-            <input type="email" placeholder="example@email.com">
-          </div>
-          <div class="form-group">
-            <label>نوع الفعالية</label>
-            <select>
-              <option>حفل زفاف</option>
-              <option>حفل خطوبة</option>
-              <option>مؤتمر</option>
-              <option>حفل تخرج</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>عدد الضيوف المتوقع</label>
-            <input id="guestsInput" type="number" placeholder="٣٠٠" value="300">
-          </div>
-          <div class="form-group">
-            <label>وقت البداية</label>
-            <input type="time" value="20:00">
-          </div>
-          <div class="form-group full">
-            <label>ملاحظات إضافية</label>
-            <textarea placeholder="أي طلبات خاصة أو ملاحظات تريد إبلاغنا بها..."></textarea>
-          </div>
-        </div>
-      </div>
-
-      <!-- REVIEWS -->
-      <div class="card">
-        <div class="card-title"><i class="fas fa-star"></i> تقييمات العملاء</div>
-        <div class="reviews-list">
-          <div class="review">
-            <div class="review-header">
-              <div class="reviewer">
-                <div class="reviewer-avatar">م</div>
-                <div><div class="reviewer-name">محمد وسارة</div><div class="review-date">مارس ٢٠٢٦</div></div>
-              </div>
-              <div class="review-stars">★★★★★</div>
+    <!-- HALL HEADER -->
+    <div class="hall-header">
+        <div class="hall-header-info">
+            <h1>قاعة كراون بالاس</h1>
+            <div class="hall-meta">
+                <div class="meta-item"><i class="fas fa-map-marker-alt"></i> مدينة نصر، القاهرة</div>
+                <div class="meta-item"><i class="fas fa-users"></i> حتى ١٠٠٠ ضيف</div>
+                <div class="meta-item"><i class="fas fa-parking"></i> موقف سيارات</div>
+                <div class="hall-rating-big">
+                    <span class="rating-stars">★★★★★</span>
+                    <span class="rating-num">٤.٩</span>
+                    <span class="rating-cnt">(٢٣٤ تقييم)</span>
+                </div>
             </div>
-            <p class="review-text">قاعة رائعة جداً والخدمة كانت ممتازة من أول لحظة لآخر لحظة. الفريق كان متعاون جداً وطلباتنا كلها تم تنفيذها بالضبط. ننصح بها بشدة!</p>
-          </div>
-          <div class="review">
-            <div class="review-header">
-              <div class="reviewer">
-                <div class="reviewer-avatar">ن</div>
-                <div><div class="reviewer-name">نور الأنصاري</div><div class="review-date">فبراير ٢٠٢٦</div></div>
-              </div>
-              <div class="review-stars">★★★★★</div>
-            </div>
-            <p class="review-text">الديكور كان خيالي والكاتيرينج لذيذ جداً. القاعة واسعة ومريحة. الوحيد اللي أخذت نجمة هو موقف السيارات كان ضغط شوية.</p>
-          </div>
         </div>
-      </div>
+        <div class="hall-price-big">
+            <div class="price">٢٥،٠٠٠ ج</div>
+            <div class="price-sub">يبدأ من / ليلة</div>
+        </div>
     </div>
 
-    <!-- RIGHT: Summary -->
-    <div>
-      <div class="summary-card">
-        <div class="summary-header">
-          <div class="summary-hall">🏛️ قاعة كراون بالاس</div>
-          <div class="summary-loc"><i class="fas fa-map-marker-alt"></i> مدينة نصر، القاهرة</div>
+    <!-- GALLERY -->
+    <div class="gallery">
+        <div class="gallery-item gallery-main">🏛️</div>
+        <div class="gallery-item">✨</div>
+        <div class="gallery-item">🌹</div>
+        <div class="gallery-item">🎊</div>
+        <div class="gallery-item" style="position:relative">
+            🌸
+            <div class="gallery-more">+١٢ صورة</div>
         </div>
-        <div class="summary-body">
-          <!-- Date -->
-          <div class="summary-section">
-            <div class="card-title" style="margin-bottom:0.8rem"><i class="fas fa-calendar-check"></i> موعد الحجز</div>
-            <div class="summary-date">
-              <i class="fas fa-calendar-alt"></i>
-              <div>
-                <div class="date-text" id="selectedDateDisplay">لم يتم اختيار تاريخ بعد</div>
-                <div class="date-sub">الساعة ٨:٠٠ مساءً</div>
-              </div>
-            </div>
-            <div class="summary-row"><span class="label">المدة</span><span class="val">١٢ ساعة (ليلة كاملة)</span></div>
-            <div class="summary-row"><span class="label">عدد الضيوف</span><span class="val" id="summaryGuestsValue">٣٠٠ ضيف</span></div>
-          </div>
-
-          <!-- Price -->
-          <div class="summary-section">
-            <div class="card-title" style="margin-bottom:0.8rem"><i class="fas fa-receipt"></i> تفاصيل السعر</div>
-            <div class="price-breakdown">
-              <div class="price-row"><span class="label">إيجار القاعة</span><span class="val" id="summaryBasePrice">٢٥،٠٠٠ ج</span></div>
-              <div class="price-row"><span class="label">كاتيرينج كامل</span><span class="val">٨،٠٠٠ ج</span></div>
-              <div class="price-row"><span class="label">تصوير فيديو</span><span class="val">٣،٠٠٠ ج</span></div>
-              <div class="price-row discount"><span class="label">خصم ١٠٪</span><span class="val">- ٣،٦٠٠ ج</span></div>
-              <hr class="price-divider">
-              <div class="price-row"><span class="label">رسوم الخدمة</span><span class="val">٩٠٠ ج</span></div>
-              <hr class="price-divider">
-              <div class="price-total"><span class="label">الإجمالي</span><span class="val">٣٣،٣٠٠ ج</span></div>
-            </div>
-          </div>
-
-          <!-- Payment -->
-          <div class="summary-section">
-            <div class="card-title" style="margin-bottom:0.8rem"><i class="fas fa-credit-card"></i> طريقة الدفع</div>
-            <div class="payment-methods">
-              <label class="payment-opt selected" onclick="selectPayment(this)">
-                <input type="radio" name="payment" checked>
-                <div class="payment-radio"></div>
-                <div class="payment-icon">💳</div>
-                <div><div class="payment-name">بطاقة ائتمان / خصم</div><div class="payment-sub">Visa, Mastercard</div></div>
-              </label>
-              <label class="payment-opt" onclick="selectPayment(this)">
-                <input type="radio" name="payment">
-                <div class="payment-radio"></div>
-                <div class="payment-icon">📱</div>
-                <div><div class="payment-name">فودافون كاش</div><div class="payment-sub">الدفع بالمحفظة الإلكترونية</div></div>
-              </label>
-              <label class="payment-opt" onclick="selectPayment(this)">
-                <input type="radio" name="payment">
-                <div class="payment-radio"></div>
-                <div class="payment-icon">🏦</div>
-                <div><div class="payment-name">تحويل بنكي</div><div class="payment-sub">دفع مقدم ٣٠٪</div></div>
-              </label>
-            </div>
-          </div>
-
-          <button class="btn-book-now" onclick="confirmBooking()">
-            <i class="fas fa-check-circle"></i> تأكيد الحجز الآن
-          </button>
-          <div class="secure-note"><i class="fas fa-lock"></i> دفع آمن ومشفر بالكامل</div>
-        </div>
-      </div>
     </div>
-  </div>
+
+    <!-- BOOKING LAYOUT -->
+    <div class="booking-layout">
+        <!-- LEFT: Details -->
+        <div class="left-panel">
+
+            <!-- CALENDAR -->
+            <div class="card">
+                <div class="card-title"><i class="fas fa-calendar-alt"></i> اختر تاريخ الحفل</div>
+                <div class="calendar-header">
+                    <button class="cal-nav" onclick="changeMonth(-1)"
+                            style="background:none;border:none;cursor:pointer;color:var(--gold);font-size:1.1rem"><i
+                            class="fas fa-chevron-right"></i></button>
+                    <span class="cal-month" id="calMonth">مارس ٢٠٢٦</span>
+                    <button class="cal-nav" onclick="changeMonth(1)"
+                            style="background:none;border:none;cursor:pointer;color:var(--gold);font-size:1.1rem"><i
+                            class="fas fa-chevron-left"></i></button>
+                </div>
+                <div class="cal-grid" id="calGrid">
+                    <div class="cal-day-name">أح</div>
+                    <div class="cal-day-name">إث</div>
+                    <div class="cal-day-name">ثل</div>
+                    <div class="cal-day-name">أر</div>
+                    <div class="cal-day-name">خم</div>
+                    <div class="cal-day-name">جم</div>
+                    <div class="cal-day-name">سب</div>
+                </div>
+                <div class="cal-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot available"></div>
+                        متاح
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot booked"></div>
+                        محجوز
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot today"></div>
+                        اليوم
+                    </div>
+                </div>
+            </div>
+
+            <!-- SERVICES -->
+            <div class="card">
+                <div class="card-title"><i class="fas fa-concierge-bell"></i> اختر الخدمات الإضافية</div>
+                <div class="services-grid">
+                    <div class="service-item selected" onclick="toggleService(this)">
+                        <div class="service-icon">🍽️</div>
+                        <div class="service-info">
+                            <div class="service-name">كاتيرينج كامل</div>
+                            <div class="service-price">+٨،٠٠٠ ج</div>
+                        </div>
+                        <div class="service-check"></div>
+                    </div>
+                    <div class="service-item" onclick="toggleService(this)">
+                        <div class="service-icon">🌸</div>
+                        <div class="service-info">
+                            <div class="service-name">ديكور وزهور</div>
+                            <div class="service-price">+٥،٠٠٠ ج</div>
+                        </div>
+                        <div class="service-check"></div>
+                    </div>
+                    <div class="service-item selected" onclick="toggleService(this)">
+                        <div class="service-icon">📸</div>
+                        <div class="service-info">
+                            <div class="service-name">تصوير فيديو</div>
+                            <div class="service-price">+٣،٠٠٠ ج</div>
+                        </div>
+                        <div class="service-check"></div>
+                    </div>
+                    <div class="service-item" onclick="toggleService(this)">
+                        <div class="service-icon">🎵</div>
+                        <div class="service-info">
+                            <div class="service-name">موسيقى ودي جي</div>
+                            <div class="service-price">+٢،٥٠٠ ج</div>
+                        </div>
+                        <div class="service-check"></div>
+                    </div>
+                    <div class="service-item" onclick="toggleService(this)">
+                        <div class="service-icon">💡</div>
+                        <div class="service-info">
+                            <div class="service-name">إضاءة خاصة</div>
+                            <div class="service-price">+١،٥٠٠ ج</div>
+                        </div>
+                        <div class="service-check"></div>
+                    </div>
+                    <div class="service-item" onclick="toggleService(this)">
+                        <div class="service-icon">🚌</div>
+                        <div class="service-info">
+                            <div class="service-name">نقل ضيوف</div>
+                            <div class="service-price">+٤،٠٠٠ ج</div>
+                        </div>
+                        <div class="service-check"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DETAILS FORM -->
+            <div class="card">
+                <div class="card-title"><i class="fas fa-user-edit"></i> بيانات الحجز</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>الاسم الكامل</label>
+                        <input type="text" placeholder="محمد أحمد">
+                    </div>
+                    <div class="form-group">
+                        <label>رقم الهاتف</label>
+                        <input type="tel" placeholder="01xxxxxxxxx">
+                    </div>
+                    <div class="form-group">
+                        <label>البريد الإلكتروني</label>
+                        <input type="email" placeholder="example@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>نوع الفعالية</label>
+                        <select>
+                            <option>حفل زفاف</option>
+                            <option>حفل خطوبة</option>
+                            <option>مؤتمر</option>
+                            <option>حفل تخرج</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>عدد الضيوف المتوقع</label>
+                        <input id="guestsInput" type="number" placeholder="٣٠٠" value="300">
+                    </div>
+                    <div class="form-group">
+                        <label>وقت البداية</label>
+                        <input type="time" value="20:00">
+                    </div>
+                    <div class="form-group full">
+                        <label>ملاحظات إضافية</label>
+                        <textarea placeholder="أي طلبات خاصة أو ملاحظات تريد إبلاغنا بها..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REVIEWS -->
+            <div class="card">
+                <div class="card-title"><i class="fas fa-star"></i> تقييمات العملاء</div>
+                <div class="reviews-list">
+                    <div class="review">
+                        <div class="review-header">
+                            <div class="reviewer">
+                                <div class="reviewer-avatar">م</div>
+                                <div>
+                                    <div class="reviewer-name">محمد وسارة</div>
+                                    <div class="review-date">مارس ٢٠٢٦</div>
+                                </div>
+                            </div>
+                            <div class="review-stars">★★★★★</div>
+                        </div>
+                        <p class="review-text">قاعة رائعة جداً والخدمة كانت ممتازة من أول لحظة لآخر لحظة. الفريق كان
+                            متعاون جداً وطلباتنا كلها تم تنفيذها بالضبط. ننصح بها بشدة!</p>
+                    </div>
+                    <div class="review">
+                        <div class="review-header">
+                            <div class="reviewer">
+                                <div class="reviewer-avatar">ن</div>
+                                <div>
+                                    <div class="reviewer-name">نور الأنصاري</div>
+                                    <div class="review-date">فبراير ٢٠٢٦</div>
+                                </div>
+                            </div>
+                            <div class="review-stars">★★★★★</div>
+                        </div>
+                        <p class="review-text">الديكور كان خيالي والكاتيرينج لذيذ جداً. القاعة واسعة ومريحة. الوحيد اللي
+                            أخذت نجمة هو موقف السيارات كان ضغط شوية.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: Summary -->
+        <div>
+            <div class="summary-card">
+                <div class="summary-header">
+                    <div class="summary-hall">🏛️ قاعة كراون بالاس</div>
+                    <div class="summary-loc"><i class="fas fa-map-marker-alt"></i> مدينة نصر، القاهرة</div>
+                </div>
+                <div class="summary-body">
+                    <!-- Date -->
+                    <div class="summary-section">
+                        <div class="card-title" style="margin-bottom:0.8rem"><i class="fas fa-calendar-check"></i> موعد
+                            الحجز
+                        </div>
+                        <div class="summary-date">
+                            <i class="fas fa-calendar-alt"></i>
+                            <div>
+                                <div class="date-text" id="selectedDateDisplay">لم يتم اختيار تاريخ بعد</div>
+                                <div class="date-sub">الساعة ٨:٠٠ مساءً</div>
+                            </div>
+                        </div>
+                        <div class="summary-row"><span class="label">المدة</span><span
+                                class="val">١٢ ساعة (ليلة كاملة)</span></div>
+                        <div class="summary-row"><span class="label">عدد الضيوف</span><span class="val"
+                                                                                            id="summaryGuestsValue">٣٠٠ ضيف</span>
+                        </div>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="summary-section">
+                        <div class="card-title" style="margin-bottom:0.8rem"><i class="fas fa-receipt"></i> تفاصيل السعر
+                        </div>
+                        <div class="price-breakdown">
+                            <div class="price-row"><span class="label">إيجار القاعة</span><span class="val"
+                                                                                                id="summaryBasePrice">٢٥،٠٠٠ ج</span>
+                            </div>
+                            <div class="price-row"><span class="label">كاتيرينج كامل</span><span
+                                    class="val">٨،٠٠٠ ج</span></div>
+                            <div class="price-row"><span class="label">تصوير فيديو</span><span
+                                    class="val">٣،٠٠٠ ج</span></div>
+                            <div class="price-row discount"><span class="label">خصم ١٠٪</span><span class="val">- ٣،٦٠٠ ج</span>
+                            </div>
+                            <hr class="price-divider">
+                            <div class="price-row"><span class="label">رسوم الخدمة</span><span class="val">٩٠٠ ج</span>
+                            </div>
+                            <hr class="price-divider">
+                            <div class="price-total"><span class="label">الإجمالي</span><span
+                                    class="val">٣٣،٣٠٠ ج</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Payment -->
+                    <div class="summary-section">
+                        <div class="card-title" style="margin-bottom:0.8rem"><i class="fas fa-credit-card"></i> طريقة
+                            الدفع
+                        </div>
+                        <div class="payment-methods">
+                            <label class="payment-opt selected" onclick="selectPayment(this)">
+                                <input type="radio" name="payment" checked>
+                                <div class="payment-radio"></div>
+                                <div class="payment-icon">💳</div>
+                                <div>
+                                    <div class="payment-name">بطاقة ائتمان / خصم</div>
+                                    <div class="payment-sub">Visa, Mastercard</div>
+                                </div>
+                            </label>
+                            <label class="payment-opt" onclick="selectPayment(this)">
+                                <input type="radio" name="payment">
+                                <div class="payment-radio"></div>
+                                <div class="payment-icon">📱</div>
+                                <div>
+                                    <div class="payment-name">فودافون كاش</div>
+                                    <div class="payment-sub">الدفع بالمحفظة الإلكترونية</div>
+                                </div>
+                            </label>
+                            <label class="payment-opt" onclick="selectPayment(this)">
+                                <input type="radio" name="payment">
+                                <div class="payment-radio"></div>
+                                <div class="payment-icon">🏦</div>
+                                <div>
+                                    <div class="payment-name">تحويل بنكي</div>
+                                    <div class="payment-sub">دفع مقدم ٣٠٪</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button class="btn-book-now" onclick="confirmBooking()">
+                        <i class="fas fa-check-circle"></i> تأكيد الحجز الآن
+                    </button>
+                    <div class="secure-note"><i class="fas fa-lock"></i> دفع آمن ومشفر بالكامل</div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- SUCCESS MODAL -->
 <div class="modal-overlay" id="successModal">
-  <div class="modal">
-    <div class="modal-icon">🎉</div>
-    <h2>تم الحجز بنجاح!</h2>
-    <p>مبروك! تم تأكيد حجز قاعة كراون بالاس. ستصلك رسالة تأكيد على بريدك الإلكتروني ورقم هاتفك.</p>
-    <div class="modal-ref">
-      <div class="ref-label">رقم الحجز</div>
-      <div class="ref-num">#FRH-2026-04892</div>
+    <div class="modal">
+        <div class="modal-icon">🎉</div>
+        <h2>تم الحجز بنجاح!</h2>
+        <p id="bookingSuccessMessage">
+            مبروك! تم تأكيد الحجز.
+        </p>
+        <!--        <p>مبروك! تم تأكيد حجز قاعة كراون بالاس. ستصلك رسالة تأكيد على بريدك الإلكتروني ورقم هاتفك.</p>-->
+        <div class="modal-ref">
+            <div class="ref-label">رقم الحجز</div>
+            <div class="ref-num">#FRH-2026-04892</div>
+        </div>
+        <button class="btn-modal" onclick="document.getElementById('successModal').classList.remove('show')">
+            <i class="fas fa-home"></i> العودة للرئيسية
+        </button>
     </div>
-    <button class="btn-modal" onclick="document.getElementById('successModal').classList.remove('show')">
-      <i class="fas fa-home"></i> العودة للرئيسية
-    </button>
-  </div>
 </div>
 
 <script>
-  // Calendar
-  const months = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
-  const hallNameEl = document.querySelector('.hall-header-info h1');
-  const hallLocationEl = document.querySelector('.hall-meta .meta-item:nth-child(1)');
-  const hallCapacityEl = document.querySelector('.hall-meta .meta-item:nth-child(2)');
-  const hallPriceEl = document.querySelector('.hall-price-big .price');
-  const summaryHallEl = document.querySelector('.summary-hall');
-  const summaryLocEl = document.querySelector('.summary-loc');
-  const guestsInput = document.getElementById('guestsInput');
-  const summaryGuestsValue = document.getElementById('summaryGuestsValue');
-  let selectedHallId = null;
-  let selectedHallPrice = 25000;
-  let selectedHallName = 'قاعة كراون بالاس';
-  const initialNow = new Date();
-  let currentMonth = initialNow.getMonth();
-  let currentYear = initialNow.getFullYear();
-  let selectedDay = null;
-  const bookedDays = [5, 10, 15, 20, 25, 28];
+    // Calendar
+    const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+    const hallNameEl = document.querySelector('.hall-header-info h1');
+    const hallLocationEl = document.querySelector('.hall-meta .meta-item:nth-child(1)');
+    const hallCapacityEl = document.querySelector('.hall-meta .meta-item:nth-child(2)');
+    const hallPriceEl = document.querySelector('.hall-price-big .price');
+    const summaryHallEl = document.querySelector('.summary-hall');
+    const summaryLocEl = document.querySelector('.summary-loc');
+    const guestsInput = document.getElementById('guestsInput');
+    const summaryGuestsValue = document.getElementById('summaryGuestsValue');
+    let selectedHallId = null;
+    let selectedHallPrice = 25000;
+    let selectedHallName = 'قاعة كراون بالاس';
+    const initialNow = new Date();
+    let currentMonth = initialNow.getMonth();
+    let currentYear = initialNow.getFullYear();
+    let selectedDay = null;
+    const bookedDays = [5, 10, 15, 20, 25, 28];
 
-  function renderCalendar() {
-    document.getElementById('calMonth').textContent = months[currentMonth] + ' ' + currentYear;
-    const grid = document.getElementById('calGrid');
-    // Keep day names
-    const dayNames = Array.from(grid.querySelectorAll('.cal-day-name'));
-    grid.innerHTML = '';
-    dayNames.forEach(d => grid.appendChild(d));
+    function renderCalendar() {
+        document.getElementById('calMonth').textContent = months[currentMonth] + ' ' + currentYear;
+        const grid = document.getElementById('calGrid');
+        // Keep day names
+        const dayNames = Array.from(grid.querySelectorAll('.cal-day-name'));
+        grid.innerHTML = '';
+        dayNames.forEach(d => grid.appendChild(d));
 
-    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-    const today = new Date();
+        const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        const today = new Date();
 
-    for(let i = 0; i < firstDay; i++) {
-      const empty = document.createElement('div');
-      empty.className = 'cal-day empty';
-      grid.appendChild(empty);
-    }
-
-    let firstAvailableDay = null;
-    let firstAvailableEl = null;
-    for(let d = 1; d <= daysInMonth; d++) {
-      const dayEl = document.createElement('div');
-      dayEl.className = 'cal-day';
-      dayEl.textContent = d;
-      const date = new Date(currentYear, currentMonth, d);
-      const isPast = date < new Date(today.getFullYear(), today.getMonth(), today.getDate());
-      const isToday = date.toDateString() === today.toDateString();
-      const isBooked = bookedDays.includes(d);
-      if(isPast) dayEl.classList.add('past');
-      else if(isBooked) { dayEl.classList.add('booked'); dayEl.title = 'محجوز'; }
-      else {
-        dayEl.addEventListener('click', () => selectDay(d, dayEl));
-        if(isToday) dayEl.classList.add('today');
-        if(selectedDay === d) dayEl.classList.add('selected');
-        if(firstAvailableDay === null) {
-          firstAvailableDay = d;
-          firstAvailableEl = dayEl;
+        for (let i = 0; i < firstDay; i++) {
+            const empty = document.createElement('div');
+            empty.className = 'cal-day empty';
+            grid.appendChild(empty);
         }
-      }
-      grid.appendChild(dayEl);
+
+        let firstAvailableDay = null;
+        let firstAvailableEl = null;
+        for (let d = 1; d <= daysInMonth; d++) {
+            const dayEl = document.createElement('div');
+            dayEl.className = 'cal-day';
+            dayEl.textContent = d;
+            const date = new Date(currentYear, currentMonth, d);
+            const isPast = date < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const isToday = date.toDateString() === today.toDateString();
+            const isBooked = bookedDays.includes(d);
+            if (isPast) dayEl.classList.add('past');
+            else if (isBooked) {
+                dayEl.classList.add('booked');
+                dayEl.title = 'محجوز';
+            } else {
+                dayEl.addEventListener('click', () => selectDay(d, dayEl));
+                if (isToday) dayEl.classList.add('today');
+                if (selectedDay === d) dayEl.classList.add('selected');
+                if (firstAvailableDay === null) {
+                    firstAvailableDay = d;
+                    firstAvailableEl = dayEl;
+                }
+            }
+            grid.appendChild(dayEl);
+        }
+
+        // لتسهيل الاستخدام: لو المستخدم لم يختر يومًا يدويًا، نختار أول يوم متاح تلقائيًا.
+        if (selectedDay === null && firstAvailableDay !== null && firstAvailableEl) {
+            selectDay(firstAvailableDay, firstAvailableEl);
+        }
     }
 
-    // لتسهيل الاستخدام: لو المستخدم لم يختر يومًا يدويًا، نختار أول يوم متاح تلقائيًا.
-    if (selectedDay === null && firstAvailableDay !== null && firstAvailableEl) {
-      selectDay(firstAvailableDay, firstAvailableEl);
+    function selectDay(d, el) {
+        document.querySelectorAll('.cal-day.selected').forEach(e => e.classList.remove('selected'));
+        el.classList.add('selected');
+        selectedDay = d;
+        const dateStr = d + ' ' + months[currentMonth] + ' ' + currentYear;
+        document.getElementById('selectedDateDisplay').textContent = dateStr;
     }
-  }
 
-  function selectDay(d, el) {
-    document.querySelectorAll('.cal-day.selected').forEach(e => e.classList.remove('selected'));
-    el.classList.add('selected');
-    selectedDay = d;
-    const dateStr = d + ' ' + months[currentMonth] + ' ' + currentYear;
-    document.getElementById('selectedDateDisplay').textContent = dateStr;
-  }
+    function changeMonth(dir) {
+        currentMonth += dir;
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        }
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        }
+        selectedDay = null;
+        renderCalendar();
+    }
 
-  function changeMonth(dir) {
-    currentMonth += dir;
-    if(currentMonth > 11) { currentMonth = 0; currentYear++; }
-    if(currentMonth < 0) { currentMonth = 11; currentYear--; }
-    selectedDay = null;
     renderCalendar();
-  }
 
-  renderCalendar();
+    function toMoney(value) {
+        return Number(value || 0).toLocaleString('ar-EG') + ' ج';
+    }
 
-  function toMoney(value) {
-    return Number(value || 0).toLocaleString('ar-EG') + ' ج';
-  }
+    async function loadHallData() {
+        const hallId = Number(new URLSearchParams(window.location.search).get('hall_id') || 0);
+        if (!hallId) return;
+        const response = await fetch(`/api/halls/${hallId}`);
+        const payload = await response.json();
+        if (!response.ok || !payload.success) return;
 
-  async function loadHallData() {
-    const hallId = Number(new URLSearchParams(window.location.search).get('hall_id') || 0);
-    if (!hallId) return;
-    const response = await fetch(`/api/halls/${hallId}`);
-    const payload = await response.json();
-    if (!response.ok || !payload.success) return;
+        const hall = payload.data;
+        selectedHallId = hall.id;
+        selectedHallPrice = Number(hall.price || 0);
+        selectedHallName = hall.name;
+        document.getElementById("bookingSuccessMessage").textContent =
+            `مبروك! تم تأكيد حجز ${hall.name}. ستصلك رسالة تأكيد على بريدك الإلكتروني ورقم هاتفك.`;
+        hallNameEl.textContent = hall.name;
+        hallLocationEl.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${hall.location}`;
+        hallCapacityEl.innerHTML = `<i class="fas fa-users"></i> حتى ${hall.capacity} ضيف`;
+        hallPriceEl.textContent = toMoney(hall.price);
+        summaryHallEl.textContent = `🏛️ ${hall.name}`;
+        summaryLocEl.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${hall.location}`;
+        document.getElementById('summaryBasePrice').textContent = toMoney(hall.price);
+    }
 
-    const hall = payload.data;
-    selectedHallId = hall.id;
-    selectedHallPrice = Number(hall.price || 0);
-    selectedHallName = hall.name;
+    loadHallData();
 
-    hallNameEl.textContent = hall.name;
-    hallLocationEl.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${hall.location}`;
-    hallCapacityEl.innerHTML = `<i class="fas fa-users"></i> حتى ${hall.capacity} ضيف`;
-    hallPriceEl.textContent = toMoney(hall.price);
-    summaryHallEl.textContent = `🏛️ ${hall.name}`;
-    summaryLocEl.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${hall.location}`;
-    document.getElementById('summaryBasePrice').textContent = toMoney(hall.price);
-  }
+    function toggleService(el) {
+        el.classList.toggle('selected');
+    }
 
-  loadHallData();
+    function selectPayment(el) {
+        document.querySelectorAll('.payment-opt').forEach(p => p.classList.remove('selected'));
+        el.classList.add('selected');
+    }
 
-  function toggleService(el) {
-    el.classList.toggle('selected');
-  }
+    guestsInput.addEventListener('input', () => {
+        summaryGuestsValue.textContent = `${guestsInput.value || 0} ضيف`;
+    });
 
-  function selectPayment(el) {
-    document.querySelectorAll('.payment-opt').forEach(p => p.classList.remove('selected'));
-    el.classList.add('selected');
-  }
+    // جمع الخدمات المختارة
+    function getSelectedServices() {
+        const services = [];
+        document.querySelectorAll('.service-item.selected').forEach(item => {
+            const name = item.querySelector('.service-name').textContent.trim();
+            const priceText = item.querySelector('.service-price').textContent.trim();
+            const price = parseInt(priceText.replace(/[^0-9]/g, '')) || 0;
 
-  guestsInput.addEventListener('input', () => {
-    summaryGuestsValue.textContent = `${guestsInput.value || 0} ضيف`;
-  });
+            services.push({
+                name: name,
+                price: price
+            });
+        });
+        return services;
+    }
 
-  function confirmBooking() {
-  if(!selectedDay) { alert('من فضلك اختر تاريخ الحجز أولاً'); return; }
-  if(!selectedHallId) { alert('يرجى الدخول من صفحة القاعات عبر زر عرض وحجز.'); return; }
-  if(!guestsInput.value) { alert('من فضلك أدخل عدد الضيوف.'); return; }
-  
-  // داتا الحجز اللي هتتبعت للباك اند
-  const bookingData = {
-      hall_id: selectedHallId,
-      hall_name: selectedHallName,
-      date: `${currentYear}-${String(currentMonth + 1).padStart(2,'0')}-${String(selectedDay).padStart(2,'0')}`,
-      guests: Number(guestsInput.value),
-      price: selectedHallPrice
-  };
+    // تعديل دالة confirmBooking
+    function confirmBooking() {
+        if (!selectedDay) {
+            alert('من فضلك اختر تاريخ الحجز أولاً');
+            return;
+        }
+        if (!selectedHallId) {
+            alert('يرجى الدخول من صفحة القاعات عبر زر عرض وحجز.');
+            return;
+        }
+        if (!guestsInput.value) {
+            alert('من فضلك أدخل عدد الضيوف.');
+            return;
+        }
 
-  fetch('/api/book', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(bookingData)
-  })
-  .then(response => response.json().then((data) => ({ ok: response.ok, data })))
-  .then(data => {
-      if(data.ok && data.data.success) {
-          document.getElementById('successModal').classList.add('show');
-      } else {
-          alert((data.data && data.data.message) || 'فشل الحجز');
-          window.location.href = "login.html";
-      }
-  });
-}
+        // جمع الخدمات المختارة
+        const selectedServices = [];
+        document.querySelectorAll('.service-item.selected').forEach(item => {
+            const nameEl = item.querySelector('.service-name');
+            const priceEl = item.querySelector('.service-price');
+
+            if (nameEl && priceEl) {
+                const name = nameEl.textContent.trim();
+                const priceText = priceEl.textContent.trim();
+                const price = parseInt(priceText.replace(/[^0-9]/g, '')) || 0;
+
+                selectedServices.push({
+                    name: name,
+                    price: price
+                });
+            }
+        });
+        const paymentMethod =
+            document.querySelector('.payment-opt.selected .payment-name').textContent.trim();
+        const bookingData = {
+            hall_id: selectedHallId,
+            hall_name: selectedHallName,
+            date: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`,
+            guests: Number(guestsInput.value),
+            price: selectedHallPrice,
+            services: selectedServices,
+            payment_method: paymentMethod
+        };
+
+        console.log("Sending booking with services:", bookingData); // للdebug
+
+        fetch('/api/book', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(bookingData)
+        })
+            .then(response => response.json().then(data => ({ok: response.ok, data})))
+            .then(result => {
+                if (result.ok && result.data.success) {
+                    document.getElementById('successModal').classList.add('show');
+                } else {
+                    alert(result.data.message || 'فشل الحجز');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('حدث خطأ في الاتصال');
+            });
+    }
 </script>
 </body>
 </html>

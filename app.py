@@ -23,6 +23,19 @@ def create_app(test_config=None):
         conn = get_db()
         cursor = conn.cursor()
 
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS payments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            booking_id INTEGER NOT NULL,
+            payment_method TEXT NOT NULL,
+            amount REAL NOT NULL,
+            payment_status TEXT NOT NULL DEFAULT 'pending'
+                CHECK(payment_status IN ('pending','paid','failed')),
+            payment_date TEXT DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (booking_id) REFERENCES bookings(id)
+        )
+        """)
+
         # جدول المستخدمين: عميل أو صاحب قاعة.
         cursor.execute(
             """
@@ -251,7 +264,7 @@ def create_app(test_config=None):
         db.close()
         return jsonify({"success": True, "data": halls})
 
-    @app.route("/api/halls/<int:hall_id>", methods=["GET"])
+    @app.route("/api/h alls/<int:hall_id>", methods=["GET"])
     def get_hall(hall_id):
         db = get_db()
         hall = db.execute(
@@ -305,18 +318,19 @@ def create_app(test_config=None):
         hall_id = data.get("hall_id")
         booking_date = (data.get("date") or "").strip()
         guests = data.get("guests")
+        services_data = data.get("services", [])  # الخدمات اللي جاية من الفرونت
+        payment_method = data.get("payment_method", "")
 
-        if hall_id is None:
-            # دعم التوافق مع الواجهة الحالية التي ترسل hall_name بدل hall_id.
-            hall_name = (data.get("hall_name") or "").strip()
-            if hall_name:
-                db = get_db()
-                hall_row = db.execute(
-                    "SELECT id FROM halls WHERE name = ? AND is_active = 1",
-                    (hall_name,),
-                ).fetchone()
-                db.close()
-                hall_id = hall_row["id"] if hall_row else None
+        # دعم hall_name
+        if hall_id is None and data.get("hall_name"):
+            db = get_db()
+            hall_row = db.execute(
+                "SELECT id FROM halls WHERE name = ? AND is_active = 1",
+                (data.get("hall_name"),)
+            ).fetchone()
+            db.close()
+            if hall_row:
+                hall_id = hall_row["id"]
 
         if not all([hall_id, booking_date, guests]):
             return jsonify({"success": False, "message": "بيانات الحجز غير مكتملة"}), 400
@@ -324,25 +338,59 @@ def create_app(test_config=None):
         db = get_db()
         hall = db.execute(
             "SELECT id, price FROM halls WHERE id = ? AND is_active = 1",
-            (hall_id,),
+            (hall_id,)
         ).fetchone()
+
         if not hall:
             db.close()
             return jsonify({"success": False, "message": "القاعة غير موجودة"}), 404
 
         total_price = float(data.get("price") or hall["price"])
+
+        # إنشاء الحجز
         cursor = db.execute(
             """
-            INSERT INTO bookings (user_id, hall_id, booking_date, guests, total_price, status)
+            INSERT INTO bookings 
+            (user_id, hall_id, booking_date, guests, total_price, status)
             VALUES (?, ?, ?, ?, ?, 'pending')
             """,
-            (session["user_id"], hall["id"], booking_date, int(guests), total_price),
+            (session["user_id"], hall["id"], booking_date, int(guests), total_price)
         )
+        booking_id = cursor.lastrowid
+
+        db.execute(
+            """
+            INSERT INTO payments
+            (booking_id, payment_method, amount, payment_status)
+            VALUES (?, ?, ?, ?)
+            """,
+            (
+                booking_id,
+                payment_method,
+                total_price,
+                "pending"
+            )
+        )
+
+        # إضافة الخدمات
+        for service in services_data:
+            if isinstance(service, dict) and service.get("name"):
+                db.execute(
+                    """
+                    INSERT INTO booking_services (booking_id, service_name, price)
+                    VALUES (?, ?, ?)
+                    """,
+                    (booking_id, service["name"], service.get("price", 0))
+                )
+
         db.commit()
         db.close()
-        return jsonify(
-            {"success": True, "message": "تم الحجز بنجاح!", "booking_id": cursor.lastrowid}
-        )
+
+        return jsonify({
+            "success": True,
+            "message": "تم الحجز بنجاح!",
+            "booking_id": booking_id
+        })
 
     @app.route("/api/owner/bookings", methods=["GET"])
     def owner_bookings():
